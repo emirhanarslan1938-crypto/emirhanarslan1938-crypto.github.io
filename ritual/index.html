@@ -2105,7 +2105,8 @@ function wikiCacheSet(k, v) {
 }
 function wapi(lang, params) {
   const q = new URLSearchParams({ format: 'json', origin: '*', formatversion: '2', ...params });
-  return fetch(`https://${lang}.wikipedia.org/w/api.php?${q}`).then(r => { if (!r.ok) throw new Error('wiki ' + r.status); return r.json(); });
+  return fetch(`https://${lang}.wikipedia.org/w/api.php?${q}`).then(r => { if (!r.ok) throw new Error('wiki ' + r.status); return r.json(); })
+    .then(j => { if (j && j.error) throw new Error('wiki api: ' + (j.error.code || '') + ' ' + (j.error.info || '')); return j; });
 }
 async function wikiSearch(album) {
   const d = await wapi('en', { action: 'query', list: 'search', srsearch: `${album.title} ${album.artist} album`, srlimit: '8', srprop: 'snippet' });
@@ -2142,10 +2143,19 @@ function parseExtract(t) {
 const WLABEL = [[/^background|^history/i, 'Arka plan'], [/recording|production|writing/i, 'Kayıt & prodüksiyon'], [/composition|music|lyric|style|songs|theme|concept/i, 'Müzik & sözler'], [/artwork|cover|packaging|title/i, 'Kapak & isim'], [/release|promotion|tour/i, 'Yayın & turne'], [/reception|critical|review/i, 'Eleştiriler'], [/commercial|sales|chart performance/i, 'Ticari başarı'], [/legacy|influence|impact|accolade|ranking|honou?r/i, 'Miras'], [/personnel|credits|line-?up/i, 'Kadro'], [/controvers|lawsuit/i, 'Tartışmalar'], [/reissue|remaster|edition/i, 'Yeniden basımlar']];
 const wLabel = h => { for (const [r, l] of WLABEL) if (r.test(h)) return l; return h; };
 async function wikiPage(lang, title) {
-  const d = await wapi(lang, { action: 'query', prop: 'extracts|langlinks|info', explaintext: '1', exsectionformat: 'wikitext', titles: title, lllang: 'tr', inprop: 'url', redirects: '1' });
-  const p = d.query && d.query.pages && d.query.pages[0];
-  if (!p || p.missing) throw new Error('missing');
-  return { title: p.title, url: p.fullurl, raw: p.extract || '', ...parseExtract(p.extract), trTitle: (p.langlinks && p.langlinks[0] && p.langlinks[0].title) || null };
+  let p = null;
+  try {
+    const d = await wapi(lang, { action: 'query', prop: 'extracts|langlinks|info', explaintext: '1', exsectionformat: 'wiki', titles: title, lllang: 'tr', inprop: 'url', redirects: '1' });
+    p = d.query && d.query.pages && d.query.pages[0];
+    if (p && p.missing) throw new Error('missing');
+  } catch (e) { if (e.message === 'missing') throw e; p = null; }
+  if (p && p.extract) return { title: p.title, url: p.fullurl, raw: p.extract, ...parseExtract(p.extract), trTitle: (p.langlinks && p.langlinks[0] && p.langlinks[0].title) || null };
+  // fallback: REST summary (intro only)
+  const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${enc(title.replace(/ /g, '_'))}?redirect=true`);
+  if (!r.ok) throw new Error('summary ' + r.status);
+  const sm = await r.json();
+  if (!sm.extract) throw new Error('missing');
+  return { title: sm.title || title, url: (sm.content_urls && sm.content_urls.mobile && sm.content_urls.mobile.page) || `https://${lang}.wikipedia.org/wiki/${enc(title)}`, raw: sm.extract, intro: [sm.extract], sections: [], trTitle: p && p.langlinks && p.langlinks[0] ? p.langlinks[0].title : null };
 }
 const IB = { released: 'Çıkış', recorded: 'Kayıt', studio: 'Stüdyo', venue: 'Mekan', genre: 'Tür', length: 'Süre', label: 'Plak şirketi', producer: 'Prodüktör' };
 function wtmpl(inner) {
