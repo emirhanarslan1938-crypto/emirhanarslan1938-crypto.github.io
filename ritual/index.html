@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ritüel">
+<title>Ritüel — Gece Albüm Günlüğü</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0c; --bg2:#101013; --card:#16161a; --card2:#1c1c21; --line:#27272d; --line2:#34343b;
+  --text:#f3f3f5; --mute:#8d8d96; --dim:#5d5d66;
+  --red:#e3262d; --red2:#ff3b3b; --ember:#ff6a2b; --amber:#f5a524; --cold:#6b6b75;
+  --r:16px; --nav:64px;
+  --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.4}
+body{min-height:100vh;overscroll-behavior-y:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+input,textarea,select{font:inherit;color:var(--text)}
+img{display:block}
+a{color:inherit}
+.hidden{display:none!important}
+
+/* ---------- header ---------- */
+header.top{position:sticky;top:0;z-index:20;padding:calc(var(--st) + 10px) 18px 10px;display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(var(--bg) 70%, rgba(10,10,12,0));}
+.logo{font-family:'UnifrakturMaguntia',serif;font-size:30px;letter-spacing:.5px;line-height:1;color:var(--text)}
+.logo b{color:var(--red);font-weight:400}
+.iconbtn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line)}
+.iconbtn svg{width:20px;height:20px}
+
+main{padding:0 16px calc(var(--nav) + var(--sb) + 96px);max-width:640px;margin:0 auto}
+.view{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{margin:0}
+.h-sec{font-family:Oswald,'Arial Narrow',Impact,sans-serif;text-transform:uppercase;letter-spacing:1.5px;font-size:13px;color:var(--mute);font-weight:600;margin:26px 2px 10px;display:flex;justify-content:space-between;align-items:center}
+.h-sec a,.h-sec button{color:var(--red2);font-family:Inter;letter-spacing:0;text-transform:none;font-size:13px;font-weight:600}
+
+/* ---------- bottom nav ---------- */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;height:calc(var(--nav) + var(--sb));padding-bottom:var(--sb);
+  background:rgba(12,12,14,.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex}
+nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:600;color:var(--dim)}
+nav.tabs button svg{width:23px;height:23px}
+nav.tabs button.on{color:var(--text)}
+nav.tabs button.on svg{color:var(--red2)}
+
+/* ---------- generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 18px;border-radius:14px;font-weight:700;font-size:15px;background:var(--card2);border:1px solid var(--line2)}
+.btn.red{background:linear-gradient(180deg,#ef2f36,#c81d24);border-color:#ff4d52;box-shadow:0 6px 24px -8px rgba(227,38,45,.7)}
+.btn.block{width:100%}
+.btn.ghost{background:transparent}
+.btn.sm{height:36px;padding:0 12px;font-size:13px;border-radius:11px}
+.btn svg{width:18px;height:18px}
+.btn:active{transform:scale(.98)}
+.muted{color:var(--mute)}
+.chip{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:99px;border:1px solid var(--line2);background:var(--card);font-size:13px;font-weight:600;color:var(--mute);white-space:nowrap}
+.chip.on{background:rgba(227,38,45,.16);border-color:var(--red);color:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.cover{background:#1a1a1f center/cover;border-radius:10px;overflow:hidden;flex:none;position:relative}
+.cover img{width:100%;height:100%;object-fit:cover}
+.cover.ph{display:grid;place-items:center;color:var(--dim)}
+.cover.ph svg{width:40%;height:40%}
+.badge{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-weight:700;font-size:15px;min-width:42px;height:30px;padding:0 8px;border-radius:9px;display:inline-grid;place-items:center;color:#fff}
+.empty{text-align:center;padding:40px 20px;color:var(--mute)}
+.empty .big{font-size:42px;margin-bottom:8px}
+input.field,textarea.field,select.field{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;outline:none}
+input.field:focus,textarea.field:focus{border-color:var(--red)}
+label.lbl{display:block;font-size:12px;font-weight:600;color:var(--mute);margin:14px 2px 6px;text-transform:uppercase;letter-spacing:.8px}
+
+/* ---------- home ---------- */
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:26px 20px 20px;background:
+  radial-gradient(120% 90% at 100% 0%,rgba(227,38,45,.35),transparent 60%),
+  radial-gradient(80% 80% at 0% 100%,rgba(255,106,43,.12),transparent 60%),var(--card);border:1px solid var(--line)}
+.hero h1{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.5px}
+.hero p{margin:8px 0 18px;color:var(--mute)}
+.hero .row{display:flex;gap:10px}
+.hero .row .btn{flex:1}
+.streak{display:flex;gap:10px;margin-top:12px}
+.streak .s{flex:1;padding:12px 14px}
+.streak .s .n{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:26px;font-weight:700;line-height:1}
+.streak .s .l{font-size:12px;color:var(--mute);margin-top:4px}
+.week{display:flex;gap:6px;margin-top:12px}
+.week .d{flex:1;aspect-ratio:1;border-radius:10px;background:var(--card);border:1px solid var(--line);overflow:hidden;position:relative}
+.week .d img{width:100%;height:100%;object-fit:cover;opacity:.9}
+.week .d span{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 3px #000}
+.week .d.today{border-color:var(--red)}
+
+/* ---------- list rows ---------- */
+.lrow{display:flex;gap:12px;align-items:center;padding:10px;border-radius:14px}
+.lrow:active{background:var(--card)}
+.lrow .t{flex:1;min-width:0}
+.lrow .t .a{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow .t .b{font-size:13px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow .t .c{font-size:12px;color:var(--dim);margin-top:2px}
+
+/* ---------- session ---------- */
+.sess-head{position:relative;margin:0 -16px;padding:4px 16px 18px;overflow:hidden}
+.sess-head .bgblur{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(40px) saturate(1.3);opacity:.45;transform:scale(1.2)}
+.sess-head .bgblur::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(10,10,12,.2),var(--bg) 92%)}
+.sess-head .inner{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+.sess-head .cover{width:min(68vw,280px);height:min(68vw,280px);border-radius:14px;box-shadow:0 24px 60px -18px rgba(0,0,0,.9)}
+.sess-head h2{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:26px;line-height:1.1;margin-top:16px;text-transform:uppercase;letter-spacing:.3px}
+.sess-head .artist{color:var(--red2);font-weight:700;margin-top:4px;font-size:16px}
+.sess-head .meta{color:var(--mute);font-size:13px;margin-top:6px}
+.links{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.links a{text-decoration:none}
+.prog{height:6px;background:var(--card2);border-radius:9px;overflow:hidden;margin:6px 0 4px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--red2));border-radius:9px;transition:width .3s}
+.trk{padding:12px 12px 12px;border-bottom:1px solid var(--line)}
+.trk:last-child{border-bottom:0}
+.trk .top{display:flex;align-items:center;gap:10px}
+.trk .no{font-family:Oswald,'Arial Narrow',Impact,sans-serif;color:var(--dim);font-size:14px;width:22px;flex:none}
+.trk .nm{flex:1;min-width:0;font-weight:600}
+.trk .du{font-size:12px;color:var(--dim);flex:none}
+.trk .ic{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;color:var(--dim);flex:none}
+.trk .ic svg{width:19px;height:19px}
+.trk .ic.fav{color:#ffcc33}
+.trk .ic.has{color:var(--text)}
+.trk.skip .nm{color:var(--dim);text-decoration:line-through}
+.rate{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;margin-top:10px}
+.rate button{height:34px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-weight:600;font-size:14px;color:var(--mute);transition:background .12s,transform .08s}
+.rate button:active{transform:scale(.92)}
+.rate button.sk{font-family:Inter;font-size:16px}
+.rate button.on{color:#fff;border-color:transparent}
+.rate button.fill{color:#fff}
+.trk .note{margin-top:10px}
+.trk .note textarea{min-height:44px;resize:vertical;font-size:14px}
+.trk .notetxt{font-size:13px;color:var(--mute);margin:8px 0 0 32px;font-style:italic}
+.final{padding:18px}
+.final .big{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:64px;font-weight:700;line-height:1;text-align:center}
+.final .sub{text-align:center;color:var(--mute);font-size:13px;margin-top:4px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:36px;background:transparent;margin-top:12px}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:9px;background:linear-gradient(90deg,#3a3a42,var(--amber),var(--ember),var(--red2))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;margin-top:-10px;box-shadow:0 2px 10px rgba(0,0,0,.6);border:3px solid var(--red)}
+input[type=range]::-moz-range-track{height:8px;border-radius:9px;background:linear-gradient(90deg,#3a3a42,var(--amber),var(--ember),var(--red2))}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--red)}
+.savebar{position:fixed;left:0;right:0;bottom:calc(var(--nav) + var(--sb));z-index:25;padding:10px 16px;background:linear-gradient(rgba(10,10,12,0),var(--bg) 30%)}
+.savebar .in{max-width:608px;margin:0 auto;display:flex;gap:10px;align-items:center;background:rgba(28,28,33,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line2);border-radius:18px;padding:8px 8px 8px 16px}
+.savebar .avg{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:24px;font-weight:700;line-height:1}
+.savebar .avgl{font-size:11px;color:var(--mute)}
+.savebar .btn{margin-left:auto}
+
+/* ---------- sheet / modal ---------- */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;opacity:0;transition:opacity .25s;backdrop-filter:blur(2px)}
+.scrim.on{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;max-height:92vh;max-height:92dvh;background:var(--bg2);border-top-left-radius:24px;border-top-right-radius:24px;border:1px solid var(--line);border-bottom:0;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;max-width:680px;margin:0 auto}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:5px;border-radius:9px;background:var(--line2);margin:10px auto 4px;flex:none}
+.sheet .sh{display:flex;align-items:center;gap:10px;padding:6px 16px 10px;flex:none}
+.sheet .sh h3{font-family:Oswald,'Arial Narrow',Impact,sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:18px;flex:1}
+.sheet .sb{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px calc(24px + var(--sb));flex:1}
+.searchbox{position:relative}
+.searchbox svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--mute)}
+.searchbox input{padding-left:42px;height:50px;font-size:16px}
+.spinner{width:28px;height:28px;border-radius:50%;border:3px solid var(--line2);border-top-color:var(--red2);animation:spin .8s linear infinite;margin:30px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dlg{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:24px}
+.dlg .box{width:100%;max-width:360px;background:var(--card);border:1px solid var(--line2);border-radius:20px;padding:20px;animation:pop .2s ease}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.dlg h4{margin:0 0 6px;font-size:18px}
+.dlg p{margin:0 0 18px;color:var(--mute)}
+.dlg .row{display:flex;gap:10px}
+.dlg .row .btn{flex:1}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav) + var(--sb) + 90px);transform:translate(-50%,20px);opacity:0;z-index:70;background:#fff;color:#000;font-weight:700;padding:12px 18px;border-radius:14px;transition:.25s;pointer-events:none;white-space:nowrap;font-size:14px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- journal ---------- */
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:6px}
+.seg button{flex:1;height:36px;border-radius:9px;font-weight:700;font-size:14px;color:var(--mute)}
+.seg button.on{background:var(--card2);color:var(--text);box-shadow:0 1px 0 var(--line2) inset}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin:16px 0 10px}
+.cal-h h3{font-family:Oswald,'Arial Narrow',Impact,sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:18px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal .wd{text-align:center;font-size:11px;color:var(--dim);font-weight:700;padding-bottom:2px}
+.cal .c{aspect-ratio:1;border-radius:9px;background:var(--card);position:relative;overflow:hidden;border:1px solid transparent}
+.cal .c.out{background:transparent}
+.cal .c img{width:100%;height:100%;object-fit:cover}
+.cal .c .dn{position:absolute;top:3px;left:5px;font-size:11px;font-weight:700;color:var(--mute)}
+.cal .c.has .dn{color:#fff;text-shadow:0 1px 3px #000}
+.cal .c.today{border-color:var(--red)}
+.cal .c .cnt{position:absolute;right:3px;bottom:3px;background:var(--red);color:#fff;font-size:10px;font-weight:800;border-radius:6px;padding:0 4px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid3 .g{position:relative}
+.grid3 .g .cover{width:100%;aspect-ratio:1;height:auto}
+.grid3 .g .badge{position:absolute;right:5px;bottom:5px;min-width:34px;height:24px;font-size:13px;border-radius:7px}
+
+/* ---------- stats ---------- */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi{padding:14px}
+.kpi .n{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:30px;font-weight:700;line-height:1}
+.kpi .l{font-size:12px;color:var(--mute);margin-top:6px}
+.bars .br{display:flex;align-items:center;gap:10px;margin:9px 0}
+.bars .br .k{width:96px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
+.bars .br .v{flex:1;height:10px;border-radius:9px;background:var(--card2);overflow:hidden}
+.bars .br .v i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--ember),var(--red2))}
+.bars .br .x{width:44px;text-align:right;font-size:12px;color:var(--mute);flex:none}
+.hist{display:flex;align-items:flex-end;gap:5px;height:110px;padding:10px 4px 0}
+.hist .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.hist .col i{width:100%;border-radius:6px 6px 3px 3px;min-height:3px}
+.hist .col span{font-size:11px;color:var(--dim);font-weight:700}
+.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);grid-auto-columns:11px;gap:3px;justify-content:end}
+.heat i{border-radius:3px;background:var(--card2)}
+.rank{display:flex;align-items:center;gap:12px;padding:8px 4px}
+.rank .p{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:18px;color:var(--dim);width:20px;text-align:center;flex:none}
+.rank .t{flex:1;min-width:0}
+.rank .t .a{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank .t .b{font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- queue ---------- */
+.dice{font-size:44px;display:inline-block}
+.dice.roll{animation:roll .6s ease}
+@keyframes roll{0%{transform:rotate(0)}100%{transform:rotate(720deg)}}
+.pick{display:flex;gap:14px;align-items:center;padding:14px;margin-top:12px}
+
+/* ---------- v2 additions ---------- */
+nav.tabs button{font-size:10.5px}
+.trk.playing{background:linear-gradient(90deg,rgba(227,38,45,.12),transparent 70%)}
+.trk .no{background:none;border:0;padding:0;text-align:left;cursor:pointer;height:28px;display:flex;align-items:center}
+.trk.playing .no{color:var(--red2)}
+.trk.playing .du{color:var(--red2);font-weight:700}
+.trk .pv{display:block;font-size:11px;color:var(--dim);font-weight:500;margin-top:1px}
+.trk .ic.fire.has{color:var(--ember)}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:14px}
+.eq i{width:3px;background:var(--red2);border-radius:2px;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:4px}50%{height:14px}}
+.moments{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.moments:empty{display:none}
+.mchip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 4px 0 10px;border-radius:99px;background:rgba(255,106,43,.14);border:1px solid rgba(255,106,43,.35);font-size:12px;font-weight:600;color:#ffd2bd}
+.mchip button{width:22px;height:22px;border-radius:50%;font-size:11px;color:#ffb89a}
+.mchip.ro{padding-right:10px}
+.relisten{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 12px;border-radius:99px;background:rgba(245,165,36,.12);border:1px solid rgba(245,165,36,.35);color:#ffd88a;font-size:13px;font-weight:600}
+.seg.sm button{height:32px;font-size:13px}
+.nextup{display:flex;gap:12px;align-items:center;padding:12px;margin-top:12px}
+.nextup .t{flex:1;min-width:0}
+.nextup .t .k{font-size:11px;font-weight:700;color:var(--ember);letter-spacing:.8px;text-transform:uppercase}
+.nextup .t .a{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nextup .t .b{font-size:12px;color:var(--mute)}
+.jcard{padding:12px;display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.collage{width:72px;height:72px;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;flex:none;background:var(--card2)}
+.collage img{width:100%;height:100%;object-fit:cover}
+.jcard .t{flex:1;min-width:0}
+.jcard .t .a{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:19px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jcard .t .b{font-size:12px;color:var(--mute);margin-top:2px}
+.jalb{display:flex;gap:12px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line)}
+.jalb:last-child{border-bottom:0}
+.jalb.ex{opacity:.38}
+.jalb .t{flex:1;min-width:0}
+.jalb .t .a{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jalb .t .b{font-size:12px;color:var(--mute)}
+.chk{width:28px;height:28px;border-radius:8px;border:2px solid var(--line2);display:grid;place-items:center;flex:none;font-weight:800;font-size:14px}
+.chk.on{background:var(--red);border-color:var(--red)}
+.recs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rec{padding:10px;position:relative}
+.rec img,.rec .ph{width:100%;aspect-ratio:1;border-radius:12px;object-fit:cover;background:var(--card2)}
+.rec .a{font-weight:800;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec .b{font-size:11.5px;color:var(--mute);margin-top:2px;line-height:1.3;min-height:30px}
+.rec .x{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:12px}
+.rec .btn{width:100%;margin-top:8px}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bdg{padding:14px;position:relative;overflow:hidden}
+.bdg .i{font-size:30px;line-height:1;filter:grayscale(1);opacity:.45}
+.bdg.on .i{filter:none;opacity:1}
+.bdg.on{border-color:rgba(255,106,43,.45);background:radial-gradient(100% 80% at 100% 0%,rgba(227,38,45,.18),transparent 60%),var(--card)}
+.bdg .n{font-weight:800;margin-top:10px;font-size:14px}
+.bdg .d{font-size:12px;color:var(--mute);margin-top:2px;line-height:1.3;min-height:31px}
+.bdg .pb{height:5px;border-radius:9px;background:var(--card2);margin-top:10px;overflow:hidden}
+.bdg .pb i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--red2))}
+.bdg .pt{font-size:11px;color:var(--dim);margin-top:5px;font-weight:700}
+.bdg.on .pt{color:var(--ember)}
+.coll{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.coll .g{position:relative}
+.coll .g .cover{width:100%;height:auto;aspect-ratio:1}
+.coll .g .fmt{position:absolute;left:5px;bottom:5px;font-size:10px;font-weight:800;padding:3px 6px;border-radius:6px;background:rgba(0,0,0,.75);letter-spacing:.4px}
+.concert{display:flex;gap:12px;align-items:center;padding:12px;margin-bottom:10px}
+.concert .dt{width:58px;flex:none;text-align:center;border-radius:12px;background:var(--card2);padding:8px 0}
+.concert .dt .d{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:26px;font-weight:700;line-height:1}
+.concert .dt .m{font-size:11px;font-weight:700;color:var(--red2);text-transform:uppercase;margin-top:2px}
+.concert .dt .y{font-size:10px;color:var(--dim)}
+.concert .t{flex:1;min-width:0}
+.concert .t .a{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.concert .t .b{font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.concert .ph{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none}
+.map{margin:0 -4px}
+.map svg path{transition:fill .3s}
+.flags .br .k{width:120px}
+.wr{padding:18px;margin-bottom:10px;text-align:center}
+.wr .n{font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:54px;font-weight:700;line-height:1}
+.wr .l{color:var(--mute);font-size:13px;margin-top:6px}
+.wr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.story-prev{width:100%;border-radius:16px;border:1px solid var(--line2);display:block}
+.formchips{display:flex;flex-wrap:wrap;gap:8px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border-bottom:0}
+.kv span:first-child{color:var(--mute)}
+.sel-inline{background:transparent;border:0;color:var(--text);font-weight:700;font-size:14px;text-align:right;-webkit-appearance:none;appearance:none}
+
+.toast{top:calc(var(--st) + 64px);bottom:auto;transform:translate(-50%,-16px);white-space:normal;text-align:center;max-width:88vw}
+.toast.on{transform:translate(-50%,0)}
+
+.wiki{padding:14px 14px 14px;margin-top:14px}
+.wiki .wk-h{display:flex;justify-content:space-between;align-items:center;font-family:Oswald,'Arial Narrow',Impact,sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:15px}
+.wiki .wk-h small{font-family:Inter,sans-serif;text-transform:none;letter-spacing:0;color:var(--dim);font-size:11px;font-weight:600}
+.wiki .wfacts{margin-top:6px}
+.wiki .wfacts .kv span:last-child{text-align:right;max-width:65%}
+.wiki .intro{font-size:14px;color:#d4d4da;line-height:1.55;margin:10px 0 0;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.wchips{display:flex;gap:6px;overflow-x:auto;margin:12px -14px 0;padding:0 14px 2px;scrollbar-width:none}
+.wchips::-webkit-scrollbar{display:none}
+.wchips .chip{flex:none}
+.wsk{margin-top:12px}
+.wsk i{display:block;height:11px;border-radius:6px;background:linear-gradient(90deg,var(--card2),#26262c,var(--card2));background-size:200% 100%;animation:shim 1.2s linear infinite;margin-top:8px}
+@keyframes shim{to{background-position:-200% 0}}
+.wtext p{font-size:15px;line-height:1.65;color:#dcdce1;margin:0 0 12px}
+.wsec{margin-top:22px;scroll-margin-top:10px}
+.wsec h4{font-family:Oswald,'Arial Narrow',Impact,sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:17px;color:var(--red2);margin:0 0 10px;display:flex;align-items:baseline;gap:8px}
+.wsec h4 small{font-family:Inter,sans-serif;text-transform:none;letter-spacing:0;font-size:11px;color:var(--dim);font-weight:600}
+.wsub{font-weight:800;font-size:13px;color:var(--mute);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.6px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">Rit<b>ü</b>el</div>
+  <button class="iconbtn" id="btnSettings" aria-label="Ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+</header>
+
+<main id="app"></main>
+
+<nav class="tabs" id="tabs">
+  <button data-v="bugun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>Bu akşam</button>
+  <button data-v="gunluk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Günlük</button>
+  <button data-v="kesfet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Keşfet</button>
+  <button data-v="istatistik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>İstatistik</button>
+  <button data-v="raf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16M9 4v16M14 5l4 15M3 20h18"/></svg>Raf</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+const KEY = 'ritual.v1';
+const ARRAYS = ['logs', 'queue', 'journeys', 'concerts', 'collection', 'badges'];
+const blank = () => ({
+  v: 2, logs: [], queue: [], draft: null, journeys: [], concerts: [], collection: [], badges: [],
+  meta: { countries: {}, recs: null, recsHidden: [] },
+  settings: { country: 'US', source: 'itunes', lastBackup: null, badgesInit: false }
+});
+let S = load();
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return blank();
+    const d = JSON.parse(raw), b = blank();
+    const o = { ...b, ...d, settings: { ...b.settings, ...(d.settings || {}) }, meta: { ...b.meta, ...(d.meta || {}) } };
+    ARRAYS.forEach(k => { if (!Array.isArray(o[k])) o[k] = []; });
+    if (!o.meta.countries) o.meta.countries = {};
+    if (!Array.isArray(o.meta.recsHidden)) o.meta.recsHidden = [];
+    return o;
+  } catch (e) { return blank(); }
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch (e) { toast('Kaydedilemedi: depolama dolu olabilir'); }
+}
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const enc = encodeURIComponent;
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const today = () => ymd(new Date());
+const parseYmd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const fmtDate = s => parseYmd(s).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+const fmtDateShort = s => parseYmd(s).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+const fmtDay = s => parseYmd(s).toLocaleDateString('tr-TR', { weekday: 'long' });
+const fmtMs = ms => { if (!ms) return ''; const t = Math.round(ms / 1000); return `${Math.floor(t / 60)}:${pad(t % 60)}`; };
+const fmtSec = t => t == null ? '' : `${Math.floor(t / 60)}:${pad(t % 60)}`;
+const fmtLen = ms => { const m = Math.round(ms / 60000); return m >= 60 ? `${Math.floor(m / 60)} sa ${m % 60} dk` : `${m} dk`; };
+function parseSec(v) {
+  v = String(v || '').trim(); if (!v) return null;
+  if (v.includes(':')) { const [m, s] = v.split(':'); return (+m || 0) * 60 + (+s || 0); }
+  const d = v.replace(/\D/g, ''); if (!d) return null;
+  if (d.length <= 2) return +d * 60;
+  return +d.slice(0, -2) * 60 + +d.slice(-2);
+}
+const r1 = n => Math.round(n * 10) / 10;
+const fmtScore = n => n == null || isNaN(n) ? '–' : (Number.isInteger(r1(n)) ? r1(n).toFixed(0) : r1(n).toFixed(1)).replace('.', ',');
+function scoreColor(s) {
+  if (s == null) return 'var(--card2)';
+  if (s >= 9) return '#ff2d2d';
+  if (s >= 7.5) return '#ff5a2b';
+  if (s >= 6) return '#f0892a';
+  if (s >= 4.5) return '#c9a227';
+  return '#5b5b66';
+}
+const badge = s => `<span class="badge" style="background:${scoreColor(s)}">${fmtScore(s)}</span>`;
+const vib = () => { try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
+const strip = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '');
+const normA = s => strip(s).replace(/^the\s+/, '').replace(/[^a-z0-9ıi]+/g, '');
+function normT(s) {
+  s = String(s || '').toLowerCase();
+  s = s.replace(/[\(\[][^\)\]]*(remaster|deluxe|edition|expanded|anniversary|version|bonus|reissue|mono|stereo|mix|edit|live)[^\)\]]*[\)\]]/g, '');
+  s = s.replace(/\s+-\s+.*(remaster|deluxe|edition|version|reissue|mix).*$/, '');
+  return strip(s).replace(/[^a-z0-9ıi]+/g, '');
+}
+const albumKey = a => normA(a.artist) + '|' + normT(a.title);
+const PH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>`;
+function coverHtml(album, size, px) {
+  const src = album && (px > 200 ? album.cover : (album.thumb || album.cover));
+  return src
+    ? `<div class="cover" style="width:${size};height:${size}"><img src="${esc(src)}" alt="" loading="lazy" onerror="this.parentNode&&this.parentNode.classList.add('ph');this.remove()"></div>`
+    : `<div class="cover ph" style="width:${size};height:${size}">${PH}</div>`;
+}
+function toast(msg, ms = 2200) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), ms);
+}
+const flag = cc => cc && /^[A-Z]{2}$/.test(cc) ? String.fromCodePoint(...cc.split('').map(c => 127397 + c.charCodeAt(0))) : '🏳️';
+let _trN, _enN;
+const trName = cc => { try { _trN = _trN || new Intl.DisplayNames(['tr'], { type: 'region' }); return _trN.of(cc); } catch (e) { return cc; } };
+const EN_ALIAS = { 'United States': 'United States of America', 'Bosnia & Herzegovina': 'Bosnia and Herz.', 'Dominican Republic': 'Dominican Rep.', 'Myanmar (Burma)': 'Myanmar', 'Côte d’Ivoire': "Côte d'Ivoire", 'Congo - Kinshasa': 'Dem. Rep. Congo', 'Congo - Brazzaville': 'Congo', 'Central African Republic': 'Central African Rep.', 'South Sudan': 'S. Sudan', 'Equatorial Guinea': 'Eq. Guinea', 'Solomon Islands': 'Solomon Is.', 'Falkland Islands': 'Falkland Is.', 'Western Sahara': 'W. Sahara', 'Eswatini': 'eSwatini', 'North Macedonia': 'Macedonia', 'Türkiye': 'Turkey' };
+const enName = cc => { try { _enN = _enN || new Intl.DisplayNames(['en'], { type: 'region' }); const n = _enN.of(cc); return EN_ALIAS[n] || n; } catch (e) { return cc; } };
+const COMMON_CC = 'US GB DE SE NO FI DK IS NL BE FR IT ES PT PL CZ AT CH GR TR RU UA HU RO RS HR BR AR CL CO MX CA AU NZ JP KR CN IN IL IE ZA'.split(' ');
+
+/* ---------- dialogs ---------- */
+function dialog({ title, text, ok = 'Tamam', cancel = 'Vazgeç' }) {
+  return new Promise(res => {
+    const el = document.createElement('div');
+    el.innerHTML = `<div class="scrim on" style="z-index:59"></div><div class="dlg"><div class="box"><h4>${esc(title)}</h4><p>${esc(text)}</p>
+      <div class="row">${cancel ? `<button class="btn" data-r="0">${esc(cancel)}</button>` : ''}<button class="btn red" data-r="1">${esc(ok)}</button></div></div></div>`;
+    document.body.appendChild(el);
+    el.addEventListener('click', e => {
+      const b = e.target.closest('[data-r]');
+      if (b) { el.remove(); res(b.dataset.r === '1'); }
+      else if (e.target.classList.contains('dlg')) { el.remove(); res(false); }
+    });
+  });
+}
+/* fields: [{name,label,type:'text'|'chips',value,placeholder,inputmode,options:[[v,label]]}] */
+function formDialog({ title, text, fields, ok = 'Kaydet' }) {
+  return new Promise(res => {
+    const el = document.createElement('div');
+    el.innerHTML = `<div class="scrim on" style="z-index:59"></div><div class="dlg"><div class="box"><h4>${esc(title)}</h4>${text ? `<p>${esc(text)}</p>` : '<div style="height:6px"></div>'}
+      ${fields.map(f => f.type === 'chips'
+        ? `<label class="lbl" style="margin-top:6px">${esc(f.label)}</label><div class="formchips" data-f="${f.name}">${f.options.map(([v, l]) => `<button class="chip ${f.value === v ? 'on' : ''}" data-v="${esc(v)}">${esc(l)}</button>`).join('')}</div>`
+        : `<label class="lbl" style="margin-top:6px">${esc(f.label)}</label><input class="field" data-f="${f.name}" value="${esc(f.value || '')}" placeholder="${esc(f.placeholder || '')}" ${f.inputmode ? `inputmode="${f.inputmode}"` : ''}>`).join('')}
+      <div class="row" style="margin-top:18px"><button class="btn" data-r="0">Vazgeç</button><button class="btn red" data-r="1">${esc(ok)}</button></div></div></div>`;
+    document.body.appendChild(el);
+    const vals = {}; fields.forEach(f => { if (f.type === 'chips') vals[f.name] = f.value; });
+    const first = $('input[data-f]', el); if (first) setTimeout(() => first.focus(), 60);
+    const finish = r => {
+      el.remove();
+      if (!r) return res(null);
+      $$('input[data-f]', el).forEach(i => vals[i.dataset.f] = i.value);
+      res(vals);
+    };
+    el.addEventListener('click', e => {
+      const c = e.target.closest('.formchips [data-v]');
+      if (c) { const g = c.parentNode; $$('.chip', g).forEach(x => x.classList.toggle('on', x === c)); vals[g.dataset.f] = c.dataset.v; return; }
+      const b = e.target.closest('[data-r]'); if (b) finish(b.dataset.r === '1');
+    });
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) finish(true); });
+  });
+}
+
+/* =========================================================
+   MUSIC DATA (iTunes + Deezer via JSONP, MusicBrainz via CORS)
+   ========================================================= */
+function jsonp(url, cbParam = 'callback') {
+  return new Promise((resolve, reject) => {
+    const cb = '__jp' + Date.now() + Math.floor(Math.random() * 1e6);
+    const s = document.createElement('script');
+    const timer = setTimeout(() => { done(); reject(new Error('timeout')); }, 12000);
+    function done() { clearTimeout(timer); try { delete window[cb]; } catch (e) { window[cb] = undefined; } s.remove(); }
+    window[cb] = data => { done(); if (data && data.error) reject(new Error('api')); else resolve(data); };
+    s.onerror = () => { done(); reject(new Error('network')); };
+    s.src = url + (url.includes('?') ? '&' : '?') + cbParam + '=' + cb;
+    document.head.appendChild(s);
+  });
+}
+const itArt = (u, n) => u ? u.replace(/\/\d+x\d+bb\./, `/${n}x${n}bb.`) : null;
+const cc = () => (S.settings.country || 'US').toLowerCase();
+const mapIt = r => ({
+  source: 'itunes', sourceId: String(r.collectionId), artistId: r.artistId ? String(r.artistId) : null,
+  artist: r.artistName, title: r.collectionName,
+  year: r.releaseDate ? +r.releaseDate.slice(0, 4) : null,
+  genre: r.primaryGenreName || '', trackCount: r.trackCount || 0,
+  cover: itArt(r.artworkUrl100, 600), thumb: itArt(r.artworkUrl100, 200),
+  url: r.collectionViewUrl || null
+});
+const mapDz = (r, artistName) => ({
+  source: 'deezer', sourceId: String(r.id), artistId: r.artist ? String(r.artist.id) : null,
+  artist: artistName || (r.artist && r.artist.name), title: r.title,
+  year: r.release_date ? +r.release_date.slice(0, 4) : null,
+  genre: '', trackCount: r.nb_tracks || 0,
+  cover: r.cover_xl || r.cover_big, thumb: r.cover_medium, url: r.link || null
+});
+const EXCL = /\b(live|single|ep|tour|karaoke|tribute|interview|best of|greatest hits|hits|collection|anthology|demos?|instrumentals?|remix(es)?|essentials|playlist|unplugged|b-sides|rarities|box set|sessions|commentary)\b/i;
+
+const API = {
+  search(term, source) { return source === 'deezer' ? API.dzSearch(term) : API.itSearch(term); },
+  async itSearch(term) {
+    const d = await jsonp(`https://itunes.apple.com/search?term=${enc(term)}&entity=album&media=music&limit=40&country=${cc()}`);
+    return (d.results || []).filter(r => r.collectionId).map(mapIt);
+  },
+  async dzSearch(term) {
+    const d = await jsonp(`https://api.deezer.com/search/album?q=${enc(term)}&limit=40&output=jsonp`);
+    return (d.data || []).map(r => mapDz(r));
+  },
+  async tracks(album) {
+    if (album.source === 'itunes') {
+      const d = await jsonp(`https://itunes.apple.com/lookup?id=${album.sourceId}&entity=song&limit=300&country=${cc()}`);
+      const res = d.results || [];
+      const col = res.find(r => r.wrapperType === 'collection');
+      if (col) {
+        album.genre = album.genre || col.primaryGenreName || '';
+        if (!album.year && col.releaseDate) album.year = +col.releaseDate.slice(0, 4);
+        if (!album.cover && col.artworkUrl100) { album.cover = itArt(col.artworkUrl100, 600); album.thumb = itArt(col.artworkUrl100, 200); }
+      }
+      return res.filter(r => r.wrapperType === 'track')
+        .sort((a, b) => (a.discNumber - b.discNumber) || (a.trackNumber - b.trackNumber))
+        .map(r => ({ n: r.trackNumber, disc: r.discNumber || 1, title: r.trackName, ms: r.trackTimeMillis || 0 }));
+    }
+    if (album.source === 'deezer') {
+      const [info, tr] = await Promise.all([
+        jsonp(`https://api.deezer.com/album/${album.sourceId}?output=jsonp`).catch(() => ({})),
+        jsonp(`https://api.deezer.com/album/${album.sourceId}/tracks?limit=300&output=jsonp`)
+      ]);
+      if (info.release_date) album.year = +info.release_date.slice(0, 4);
+      if (info.genres && info.genres.data && info.genres.data[0]) album.genre = info.genres.data[0].name;
+      return (tr.data || []).map((r, i) => ({ n: r.track_position || i + 1, disc: r.disk_number || 1, title: r.title, ms: (r.duration || 0) * 1000 }));
+    }
+    return [];
+  },
+  async artists(term, source) {
+    if (source === 'deezer') {
+      const d = await jsonp(`https://api.deezer.com/search/artist?q=${enc(term)}&limit=15&output=jsonp`);
+      return (d.data || []).map(r => ({ source: 'deezer', artistId: String(r.id), name: r.name, sub: r.nb_fan ? `${r.nb_fan.toLocaleString('tr-TR')} hayran` : '', picture: r.picture_medium }));
+    }
+    const d = await jsonp(`https://itunes.apple.com/search?term=${enc(term)}&entity=musicArtist&media=music&limit=15&country=${cc()}`);
+    return (d.results || []).filter(r => r.artistId).map(r => ({ source: 'itunes', artistId: String(r.artistId), name: r.artistName, sub: r.primaryGenreName || '', picture: null }));
+  },
+  async discography(ar) {
+    let list = [];
+    if (ar.source === 'itunes') {
+      const d = await jsonp(`https://itunes.apple.com/lookup?id=${ar.artistId}&entity=album&limit=200&country=${cc()}`);
+      list = (d.results || []).filter(r => r.wrapperType === 'collection').map(mapIt);
+    } else {
+      const d = await jsonp(`https://api.deezer.com/artist/${ar.artistId}/albums?limit=200&output=jsonp`);
+      list = (d.data || []).filter(r => !r.record_type || r.record_type === 'album').map(r => mapDz(r, ar.name));
+    }
+    const m = new Map();
+    for (const a of list) {
+      const k = normT(a.title); if (!k) continue;
+      const p = m.get(k);
+      const better = !p || (a.year && (!p.year || a.year < p.year)) ||
+        (a.year === p.year && /remaster|deluxe|edition/i.test(p.title) && !/remaster|deluxe|edition/i.test(a.title));
+      if (better) m.set(k, a);
+    }
+    return [...m.values()]
+      .map(a => ({ ...a, artist: ar.name, excluded: EXCL.test(a.title) || (a.trackCount > 0 && a.trackCount < 4) }))
+      .sort((a, b) => (a.year || 9999) - (b.year || 9999));
+  },
+  async related(name) {
+    const s = await jsonp(`https://api.deezer.com/search/artist?q=${enc(name)}&limit=5&output=jsonp`);
+    const arr = s.data || [];
+    const pick = arr.find(a => normA(a.name) === normA(name)) || arr[0];
+    if (!pick) return [];
+    const r = await jsonp(`https://api.deezer.com/artist/${pick.id}/related?limit=15&output=jsonp`);
+    return (r.data || []).map(a => ({ id: a.id, name: a.name, picture: a.picture_medium || a.picture, fans: a.nb_fan || 0 }));
+  },
+  async mbCountry(name) {
+    const r = await fetch(`https://musicbrainz.org/ws/2/artist/?query=${enc('artist:"' + name.replace(/"/g, '') + '"')}&fmt=json&limit=5`);
+    if (!r.ok) throw new Error('mb ' + r.status);
+    const d = await r.json(); const arr = d.artists || []; const n = normA(name);
+    const pick = arr.find(a => normA(a.name) === n && a.country) || arr.find(a => normA(a.name) === n) || (arr[0] && arr[0].score >= 95 ? arr[0] : null);
+    let c = pick && pick.country;
+    if (c && (c.length !== 2 || /^X/.test(c))) c = null;
+    return c || null;
+  }
+};
+
+/* =========================================================
+   DOMAIN
+   ========================================================= */
+const SUBGENRES = ['Heavy', 'Thrash', 'Death', 'Melodic Death', 'Black', 'Doom', 'Sludge', 'Stoner', 'Prog', 'Power', 'Groove', 'Nu Metal', 'Metalcore', 'Djent', 'Post-Metal', 'Symphonic', 'Folk', 'Industrial', 'Hard Rock', 'Classic Rock', 'Alt Rock', 'Grunge', 'Punk', 'Prog Rock'];
+const MEDIUMS = [['Plak', '💿 Plak'], ['CD', '📀 CD'], ['Kaset', '📼 Kaset'], ['Kulaklık', '🎧 Kulaklık'], ['Hoparlör', '🔊 Hoparlör'], ['Araba', '🚗 Araba']];
+const FORMATS = [['Plak', 'Plak'], ['CD', 'CD'], ['Kaset', 'Kaset'], ['Dijital', 'Dijital']];
+
+function trackAvg(tracks) {
+  const s = tracks.filter(t => !t.skip && t.score != null).map(t => t.score);
+  return s.length ? s.reduce((a, b) => a + b, 0) / s.length : null;
+}
+const finalScore = log => log.albumScore != null ? log.albumScore : trackAvg(log.tracks);
+const totalMs = tracks => tracks.reduce((a, t) => a + (t.ms || 0), 0);
+const sortedLogs = () => [...S.logs].sort((a, b) => (b.date.localeCompare(a.date)) || (b.createdAt - a.createdAt));
+function logsByDate(list = S.logs) { const m = {}; for (const l of list) (m[l.date] = m[l.date] || []).push(l); return m; }
+const logsForAlbum = (a, exceptId) => S.logs.filter(l => l.id !== exceptId && albumKey(l.album) === albumKey(a)).sort((x, y) => y.date.localeCompare(x.date) || y.createdAt - x.createdAt);
+function prevScores(a, exceptId) {
+  const p = logsForAlbum(a, exceptId)[0]; if (!p) return null;
+  const m = {}; p.tracks.forEach(t => { if (t.score != null) m[normT(t.title)] = t.score; }); return { log: p, map: m };
+}
+function bestRun(dates) {
+  const sorted = [...new Set(dates)].sort(); let best = 0, run = 0, prev = null;
+  for (const s of sorted) { const dt = parseYmd(s); if (prev && Math.round((dt - prev) / 864e5) === 1) run++; else run = 1; best = Math.max(best, run); prev = dt; }
+  return best;
+}
+function streaks() {
+  const days = new Set(S.logs.map(l => l.date));
+  let cur = 0; const d = new Date();
+  if (!days.has(ymd(d))) d.setDate(d.getDate() - 1);
+  while (days.has(ymd(d))) { cur++; d.setDate(d.getDate() - 1); }
+  return { cur, best: bestRun([...days]), listenedToday: days.has(today()) };
+}
+const countryOf = artist => { const e = S.meta.countries[normA(artist)]; return e ? e.c : undefined; };
+function newDraft(album, tracks, opts = {}) {
+  return {
+    id: opts.id || uid(), editing: !!opts.editing, date: opts.date || today(), createdAt: opts.createdAt || Date.now(),
+    album, tracks: tracks.map(t => ({ score: null, skip: false, fav: false, note: '', moments: [], ...t })),
+    albumScore: opts.albumScore ?? null, note: opts.note || '', tags: opts.tags || guessTags(album.genre),
+    medium: opts.medium || defaultMedium(album), playing: null
+  };
+}
+function defaultMedium(a) {
+  const c = S.collection.find(x => x.status === 'owned' && albumKey(x.album) === albumKey(a));
+  return c && ['Plak', 'CD', 'Kaset'].includes(c.format) ? c.format : (S.settings.lastMedium || '');
+}
+function guessTags(g) {
+  g = (g || '').toLowerCase();
+  if (!g || g.includes('metal')) return [];
+  if (g.includes('hard rock')) return ['Hard Rock'];
+  if (g.includes('alternative')) return ['Alt Rock'];
+  if (g.includes('punk')) return ['Punk'];
+  if (g.includes('rock')) return ['Classic Rock'];
+  return [];
+}
+function journeyStatus(j) {
+  const inc = j.albums.filter(a => !a.excluded);
+  const items = inc.map(a => { const ls = logsForAlbum(a); return { a, logs: ls, score: ls.length ? finalScore(ls[0]) : null }; });
+  const done = items.filter(x => x.logs.length).length;
+  return { items, done, total: inc.length, next: items.find(x => !x.logs.length), complete: inc.length > 0 && done === inc.length };
+}
+
+/* ---------- badges ---------- */
+function badgeDefs() {
+  const L = S.logs;
+  const artists = new Set(L.map(l => normA(l.album.artist)));
+  const tracks = L.flatMap(l => l.tracks.filter(t => !t.skip && t.score != null));
+  const tags = new Set(L.flatMap(l => l.tags || []));
+  const decades = new Set(L.filter(l => l.album.year).map(l => Math.floor(l.album.year / 10)));
+  const countries = new Set(L.map(l => countryOf(l.album.artist)).filter(Boolean));
+  const moments = L.reduce((a, l) => a + l.tracks.reduce((b, t) => b + (t.moments || []).length, 0), 0);
+  const relisten = new Set(), seen = new Set();
+  L.forEach(l => { const k = albumKey(l.album); if (seen.has(k)) relisten.add(k); seen.add(k); });
+  const best = streaks().best;
+  const big4 = ['metallica', 'slayer', 'megadeth', 'anthrax'].filter(a => artists.has(a)).length;
+  const nordic = ['NO', 'SE', 'FI'].filter(c => countries.has(c)).length;
+  const yr = new Date().getFullYear();
+  const owned = S.collection.filter(c => c.status === 'owned').length;
+  const D = (id, i, n, d, cur, goal) => ({ id, i, n, d, cur: Math.min(cur, goal), goal, on: cur >= goal });
+  return [
+    D('first', '🎧', 'İlk seans', 'İlk albümünü puanla', L.length, 1),
+    D('a10', '💿', '10 albüm', '10 albüm dinle ve puanla', L.length, 10),
+    D('a50', '📀', '50 albüm', 'Yarım asır', L.length, 50),
+    D('a100', '🏆', '100 albüm', 'Gerçek bir dinleyici', L.length, 100),
+    D('a365', '👑', '365 albüm', 'Bir yıl dolusu albüm', L.length, 365),
+    D('s7', '🔥', '7 gün seri', '7 gün üst üste dinle', best, 7),
+    D('s30', '☄️', '30 gün seri', '30 gün aralıksız ritüel', best, 30),
+    D('ten', '💯', 'İlk 10\'luk', 'Bir şarkıya 10 ver', tracks.filter(t => t.score === 10).length, 1),
+    D('perfect', '⚡', 'Kusursuz albüm', 'Bir albüme 10 ver', L.filter(l => (finalScore(l) || 0) >= 10).length, 1),
+    D('big4', '🤘', 'Big 4', 'Metallica, Slayer, Megadeth, Anthrax', big4, 4),
+    D('gen10', '🧭', 'Tür kaşifi', '10 farklı alt tür dene', tags.size, 10),
+    D('dec', '⏳', 'Zaman yolcusu', '6 farklı on yıldan albüm', decades.size, 6),
+    D('roots', '🦇', 'Kökler', '1980 öncesi bir albüm dinle', L.filter(l => l.album.year && l.album.year < 1980).length, 1),
+    D('fresh', '🆕', 'Taze kan', `${yr} çıkışlı bir albüm dinle`, L.filter(l => l.album.year === yr).length, 1),
+    D('c5', '🌍', 'Dünya turu', '5 farklı ülkeden grup', countries.size, 5),
+    D('c10', '🗺️', 'Pasaport dolu', '10 farklı ülkeden grup', countries.size, 10),
+    D('nordic', '❄️', 'İskandinav turu', 'Norveç, İsveç ve Finlandiya', nordic, 3),
+    D('disco', '📚', 'Diskografi', 'Bir yolculuğu tamamla', S.journeys.filter(j => journeyStatus(j).complete).length, 1),
+    D('riff25', '🎸', 'Riff avcısı', '25 riff anı kaydet', moments, 25),
+    D('again', '🔁', 'Yeniden', 'Bir albümü tekrar dinle', relisten.size, 1),
+    D('vinyl', '🎶', 'Plak kurdu', '10 albümü plakta dinle', L.filter(l => l.medium === 'Plak').length, 10),
+    D('tr500', '🎼', '500 şarkı', '500 şarkı puanla', tracks.length, 500),
+    D('night', '🌙', 'Gece kuşu', 'Gece yarısından sonra seans', L.filter(l => { const h = new Date(l.savedAt || l.createdAt).getHours(); return h < 5; }).length, 1),
+    D('gig1', '🎤', 'İlk konser', 'Konser günlüğüne ilk kayıt', S.concerts.length, 1),
+    D('gig10', '🏟️', '10 konser', '10 konser kaydet', S.concerts.length, 10),
+    D('coll25', '📦', 'Koleksiyoncu', 'Koleksiyonunda 25 parça', owned, 25)
+  ];
+}
+function checkBadges() {
+  const on = badgeDefs().filter(b => b.on);
+  const fresh = on.filter(b => !S.badges.includes(b.id));
+  if (!fresh.length) return;
+  S.badges = on.map(b => b.id); save();
+  fresh.forEach((b, i) => setTimeout(() => toast(`🏅 Yeni rozet: ${b.i} ${b.n}`, 2600), 2400 + i * 2700));
+}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+const VIEWS = ['bugun', 'gunluk', 'kesfet', 'istatistik', 'raf'];
+const initial = location.hash.slice(1) === 'siradakiler' ? 'kesfet' : location.hash.slice(1);
+let view = VIEWS.includes(initial) ? initial : 'bugun';
+let ui = { journalMode: 'liste', calMonth: null, kesfet: 'sira', raf: 'koleksiyon', statYear: 'all' };
+let ticker = null;
+function go(v, sub) {
+  closeAllSheets();
+  if (sub) { if (v === 'kesfet') ui.kesfet = sub; if (v === 'raf') ui.raf = sub; }
+  view = v; if (location.hash.slice(1) !== v) history.replaceState(null, '', '#' + v);
+  render(); window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (VIEWS.includes(v) && v !== view) { closeAllSheets(); view = v; render(); } });
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) go(b.dataset.v); });
+$('#btnSettings').addEventListener('click', openSettings);
+
+function render() {
+  $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
+  const app = $('#app');
+  removeSavebar(); clearInterval(ticker); ticker = null;
+  if (view === 'bugun') S.draft ? renderSession(app) : renderHome(app);
+  else if (view === 'gunluk') renderJournal(app);
+  else if (view === 'kesfet') renderKesfet(app);
+  else if (view === 'istatistik') renderStats(app);
+  else renderRaf(app);
+}
+const segHtml = (id, items, cur, cls = '') => `<div class="seg ${cls}" id="${id}">${items.map(([k, l]) => `<button data-k="${k}" class="${cur === k ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+function bindSeg(id, fn) { const el = $('#' + id); if (el) el.onclick = e => { const b = e.target.closest('[data-k]'); if (b) fn(b.dataset.k); }; }
+function bindCommon(root) {
+  $$('[data-open]', root).forEach(el => el.addEventListener('click', () => openDetail(el.dataset.open)));
+  $$('[data-go]', root).forEach(el => el.addEventListener('click', () => go(el.dataset.go, el.dataset.sub)));
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+function renderHome(app) {
+  const st = streaks();
+  const by = logsByDate();
+  const todays = by[today()] || [];
+  const h = new Date().getHours();
+  const greet = h < 5 ? 'Gece yarısı seansı' : h < 12 ? 'Günaydın' : h < 18 ? 'İyi günler' : 'İyi akşamlar';
+  let week = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i); const k = ymd(d); const l = (by[k] || [])[0];
+    const lbl = d.toLocaleDateString('tr-TR', { weekday: 'short' }).slice(0, 3);
+    week += `<div class="d ${i === 0 ? 'today' : ''}" ${l ? `data-open="${l.id}"` : ''}>${l && (l.album.thumb || l.album.cover) ? `<img src="${esc(l.album.thumb || l.album.cover)}" alt="">` : ''}<span>${lbl}</span></div>`;
+  }
+  const recent = sortedLogs().slice(0, 4);
+  const jn = S.journeys.map(j => ({ j, st: journeyStatus(j) })).filter(x => x.st.next).sort((a, b) => (b.j.lastAt || b.j.createdAt) - (a.j.lastAt || a.j.createdAt))[0];
+  app.innerHTML = `<div class="view">
+    <div class="hero">
+      <div class="muted" style="font-weight:600;font-size:13px">${greet}${st.cur ? ` · 🔥 ${st.cur} gün seri` : ''}</div>
+      <h1 style="margin-top:6px">${todays.length ? 'Bir albüm daha?' : 'Bu akşamın<br>albümü ne?'}</h1>
+      <p>${todays.length ? `Bugün <b style="color:var(--text)">${esc(todays[0].album.title)}</b> dinledin. Bir tane daha olur.` : 'Albümü ara, kapak ve şarkılar otomatik gelsin. Dinlerken her şarkıya puan ver.'}</p>
+      <div class="row">
+        <button class="btn red" id="hStart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Albüm ara</button>
+        ${S.queue.length ? `<button class="btn" data-go="kesfet" data-sub="sira">🎲 Rastgele</button>` : ''}
+      </div>
+    </div>
+    ${jn ? `<div class="card nextup">${coverHtml(jn.st.next.a, '56px', 120)}<div class="t"><div class="k">📚 ${esc(jn.j.artist)} yolculuğu · ${jn.st.done}/${jn.st.total}</div><div class="a">${esc(jn.st.next.a.title)}</div><div class="b">${jn.st.next.a.year || ''} · sıradaki albüm</div></div><button class="btn sm red" id="hJourney">Başla</button></div>` : ''}
+    <div class="streak">
+      <div class="card s"><div class="n">${st.cur}</div><div class="l">Günlük seri 🔥</div></div>
+      <div class="card s"><div class="n">${st.best}</div><div class="l">En uzun seri</div></div>
+      <div class="card s"><div class="n">${S.logs.length}</div><div class="l">Toplam albüm</div></div>
+    </div>
+    <div class="h-sec">Son 7 gün</div>
+    <div class="week">${week}</div>
+    ${recent.length ? `<div class="h-sec">Son seanslar <button data-go="gunluk">Tümü</button></div>
+      <div>${recent.map(logRow).join('')}</div>` :
+      `<div class="empty"><div class="big">🤘</div>İlk seansını başlat — günlüğün burada birikecek.</div>`}
+  </div>`;
+  $('#hStart').onclick = () => openSearch('session');
+  if (jn) $('#hJourney').onclick = e => startFromAlbum(jn.st.next.a, e.currentTarget, jn.j);
+  bindCommon(app);
+}
+function logRow(l) {
+  const fav = l.tracks.find(t => t.fav);
+  const rel = logsForAlbum(l.album).length > 1;
+  return `<div class="lrow" data-open="${l.id}">${coverHtml(l.album, '58px', 120)}
+    <div class="t"><div class="a">${esc(l.album.title)}</div><div class="b">${esc(l.album.artist)}${l.album.year ? ' · ' + l.album.year : ''}</div>
+    <div class="c">${fmtDateShort(l.date)}${rel ? ' · 🔁' : ''}${fav ? ' · ⭐ ' + esc(fav.title) : ''}</div></div>${badge(finalScore(l))}</div>`;
+}
+async function startFromAlbum(album, btn, journey) {
+  const old = btn ? btn.textContent : '';
+  if (btn) btn.textContent = '…';
+  try {
+    const a = { ...album }; delete a.excluded;
+    const tracks = await API.tracks(a);
+    if (!tracks.length) { toast('Şarkı listesi gelmedi'); return; }
+    if (journey) { journey.lastAt = Date.now(); }
+    await startSession(a, tracks);
+  } catch (e) { toast('Yüklenemedi, tekrar dene'); }
+  finally { if (btn && btn.isConnected) btn.textContent = old; }
+}
+
+/* =========================================================
+   SESSION (rating screen)
+   ========================================================= */
+const EQ = '<span class="eq"><i></i><i></i><i></i></span>';
+const ICON = {
+  note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  fire: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
+  star: f => `<svg viewBox="0 0 24 24" fill="${f ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>`
+};
+let PREV = null;
+function renderSession(app) {
+  const D = S.draft, a = D.album;
+  if (!D.tracks.every(t => Array.isArray(t.moments))) D.tracks.forEach(t => { if (!Array.isArray(t.moments)) t.moments = []; });
+  const len = totalMs(D.tracks);
+  const q = enc(`${a.artist} ${a.title}`);
+  PREV = prevScores(a, D.id);
+  const nPrev = logsForAlbum(a, D.id).length;
+  app.innerHTML = `<div class="view">
+    <div class="sess-head">
+      ${a.cover ? `<div class="bgblur" style="background-image:url('${esc(a.cover)}')"></div>` : ''}
+      <div class="inner">
+        ${coverHtml(a, 'min(68vw,280px)', 600)}
+        <h2 lang="en">${esc(a.title)}</h2>
+        <div class="artist">${esc(a.artist)}</div>
+        <div class="meta">${[a.year, a.genre, D.tracks.length + ' şarkı', len ? fmtLen(len) : ''].filter(Boolean).map(esc).join(' · ')}</div>
+        ${PREV ? `<div class="relisten">🔁 ${nPrev + 1}. dinleyişin · önceki puanın ${fmtScore(finalScore(PREV.log))} (${fmtDateShort(PREV.log.date)} ${PREV.log.date.slice(0, 4)})</div>` : ''}
+        <div class="links">
+          <a class="chip" href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">▶ Spotify</a>
+          <a class="chip" href="${a.source === 'itunes' && a.url ? esc(a.url) : 'https://music.apple.com/search?term=' + q}" target="_blank" rel="noopener"> Apple Music</a>
+          <a class="chip" href="https://music.youtube.com/search?q=${q}" target="_blank" rel="noopener">▶ YouTube</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="wikiCard"></div>
+
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--mute);font-weight:600;margin-top:16px">
+      <span id="pTxt"></span><span id="pAvg"></span>
+    </div>
+    <div class="prog"><i id="pBar"></i></div>
+    <div class="muted" style="font-size:12px;margin-top:8px">İpucu: şarkı numarasına dokun → <b style="color:var(--text)">şu an çalıyor</b>, süre başlar. 🔥 ile riff anını o saniyeye işaretle.</div>
+
+    <div class="h-sec">Şarkılar <button id="addTrack">+ Şarkı ekle</button></div>
+    <div class="card" id="trackList"></div>
+
+    <div class="h-sec">Albüm puanın</div>
+    <div class="card final">
+      <div class="big" id="fBig"></div>
+      <div class="sub" id="fSub"></div>
+      <input type="range" min="1" max="10" step="0.5" id="fRange">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <span class="muted" style="font-size:12px">1</span>
+        <button class="chip" id="fAuto">Ortalamayı kullan</button>
+        <span class="muted" style="font-size:12px">10</span>
+      </div>
+    </div>
+
+    <div class="h-sec">Nasıl dinledin?</div>
+    <div class="chips" id="medium">${MEDIUMS.map(([k, l]) => `<button class="chip ${D.medium === k ? 'on' : ''}" data-m="${k}">${l}</button>`).join('')}</div>
+
+    <div class="h-sec">Alt tür</div>
+    <div class="chips" id="tags">${SUBGENRES.map(g => `<button class="chip ${D.tags.includes(g) ? 'on' : ''}" data-tag="${esc(g)}">${esc(g)}</button>`).join('')}</div>
+
+    <div class="h-sec">Notun</div>
+    <textarea class="field" id="note" rows="3" placeholder="Albüm hakkında ne düşündün? Ruh hali, öne çıkanlar…">${esc(D.note)}</textarea>
+
+    <label class="lbl">Tarih</label>
+    <input class="field" type="date" id="date" value="${esc(D.date)}" max="${today()}">
+
+    <div style="display:flex;gap:10px;margin-top:22px">
+      <button class="btn block ghost" id="cancel" style="color:var(--mute)">${D.editing ? 'Düzenlemeyi bırak' : 'Seansı iptal et'}</button>
+    </div>
+  </div>`;
+
+  const bar = document.createElement('div');
+  bar.className = 'savebar'; bar.id = 'savebar';
+  bar.innerHTML = `<div class="in"><div><div class="avg" id="sbAvg"></div><div class="avgl" id="sbL"></div></div>
+    <button class="btn red" id="saveBtn">${D.editing ? 'Güncelle' : 'Seansı kaydet'}</button></div>`;
+  document.body.appendChild(bar);
+
+  const list = $('#trackList');
+  refreshTracks();
+  list.addEventListener('click', async e => {
+    const row = e.target.closest('.trk'); if (!row) return;
+    const i = +row.dataset.i, t = D.tracks[i];
+    const md = e.target.closest('[data-mdel]');
+    if (md) { t.moments.splice(+md.dataset.mdel, 1); persistDraft(); refreshTracks(); return; }
+    const rb = e.target.closest('[data-s]');
+    if (rb) {
+      const v = rb.dataset.s;
+      if (v === 'skip') { t.skip = !t.skip; if (t.skip) t.score = null; }
+      else { const n = +v; t.score = t.score === n ? null : n; t.skip = false; }
+      vib();
+      if (D.playing && D.playing.i === i && t.score != null) {
+        let nx = i + 1; while (nx < D.tracks.length && D.tracks[nx].skip) nx++;
+        D.playing = nx < D.tracks.length ? { i: nx, at: Date.now() } : null;
+        persistDraft(); refreshTracks();
+      } else { persistDraft(); updateRow(row, t); }
+      updateSummary(); return;
+    }
+    if (e.target.closest('[data-play]')) {
+      D.playing = D.playing && D.playing.i === i ? null : { i, at: Date.now() };
+      vib(); persistDraft(); refreshTracks(); return;
+    }
+    if (e.target.closest('[data-fav]')) { t.fav = !t.fav; vib(); persistDraft(); updateRow(row, t); return; }
+    if (e.target.closest('[data-fire]')) {
+      const el = D.playing && D.playing.i === i ? Math.floor((Date.now() - D.playing.at) / 1000) : null;
+      const v = await formDialog({
+        title: '🔥 Riff anı', text: t.title, ok: 'İşaretle',
+        fields: [{ name: 't', label: 'Dakika (ör. 3:34 ya da 334)', value: el != null ? fmtSec(el) : '', placeholder: '3:34', inputmode: 'numeric' },
+          { name: 'note', label: 'Ne oldu? (isteğe bağlı)', placeholder: 'Solo, breakdown, nakarat…' }]
+      });
+      if (!v) return;
+      t.moments.push({ t: parseSec(v.t), note: (v.note || '').trim() });
+      vib(); persistDraft(); refreshTracks(); return;
+    }
+    if (e.target.closest('[data-note]')) {
+      const box = $('.note', row);
+      box.classList.toggle('hidden');
+      if (!box.classList.contains('hidden')) $('textarea', box).focus();
+      return;
+    }
+    if (e.target.closest('[data-del]')) { D.tracks.splice(i, 1); D.playing = null; persistDraft(); refreshTracks(); updateSummary(); }
+  });
+  list.addEventListener('input', e => {
+    const ta = e.target.closest('textarea'); if (!ta) return;
+    const row = ta.closest('.trk'); D.tracks[+row.dataset.i].note = ta.value; persistDraft();
+    $('[data-note]', row).classList.toggle('has', !!ta.value.trim());
+  });
+  ticker = setInterval(() => {
+    if (!D.playing) return;
+    const el = $(`.trk[data-i="${D.playing.i}"] .du`);
+    if (el) el.textContent = '▶ ' + fmtSec(Math.floor((Date.now() - D.playing.at) / 1000));
+  }, 1000);
+
+  $('#addTrack').onclick = async () => {
+    const v = await formDialog({ title: 'Şarkı ekle', text: 'Bonus şarkı veya eksik bir parça', ok: 'Ekle', fields: [{ name: 'n', label: 'Şarkı adı', placeholder: 'Şarkı adı' }] });
+    if (!v || !v.n.trim()) return;
+    const maxN = D.tracks.reduce((m, t) => Math.max(m, t.n || 0), 0);
+    D.tracks.push({ n: maxN + 1, disc: D.tracks.length ? D.tracks[D.tracks.length - 1].disc : 1, title: v.n.trim(), ms: 0, score: null, skip: false, fav: false, note: '', moments: [], custom: true });
+    persistDraft(); refreshTracks(); updateSummary();
+  };
+  const range = $('#fRange');
+  range.addEventListener('input', () => { D.albumScore = +range.value; vib(); persistDraft(); updateSummary(); });
+  $('#fAuto').onclick = () => { D.albumScore = null; persistDraft(); updateSummary(); };
+  $('#medium').addEventListener('click', e => {
+    const b = e.target.closest('[data-m]'); if (!b) return;
+    D.medium = D.medium === b.dataset.m ? '' : b.dataset.m;
+    $$('[data-m]', $('#medium')).forEach(x => x.classList.toggle('on', x.dataset.m === D.medium)); persistDraft();
+  });
+  $('#tags').addEventListener('click', e => {
+    const b = e.target.closest('[data-tag]'); if (!b) return;
+    const g = b.dataset.tag; const k = D.tags.indexOf(g);
+    if (k >= 0) D.tags.splice(k, 1); else D.tags.push(g);
+    b.classList.toggle('on'); persistDraft();
+  });
+  $('#note').addEventListener('input', e => { D.note = e.target.value; persistDraft(); });
+  $('#date').addEventListener('change', e => { if (e.target.value) { D.date = e.target.value; persistDraft(); } });
+  $('#cancel').onclick = async () => {
+    const ok = await dialog(D.editing
+      ? { title: 'Düzenlemeyi bırak?', text: 'Yaptığın değişiklikler kaydedilmeyecek.', ok: 'Bırak' }
+      : { title: 'Seansı iptal et?', text: 'Bu albüm için verdiğin puanlar silinecek.', ok: 'İptal et', cancel: 'Devam et' });
+    if (ok) { S.draft = null; save(); render(); }
+  };
+  $('#saveBtn').onclick = saveSession;
+  updateSummary();
+  mountWikiCard($('#wikiCard'), a);
+}
+function refreshTracks() {
+  const D = S.draft, list = $('#trackList'); if (!list) return;
+  const discs = new Set(D.tracks.map(t => t.disc)).size > 1;
+  list.innerHTML = D.tracks.map((t, i) => trackRow(t, i, discs)).join('');
+}
+function trackRow(t, i, discs) {
+  const D = S.draft;
+  const showDisc = discs && (i === 0 || D.tracks[i - 1].disc !== t.disc);
+  const playing = D.playing && D.playing.i === i;
+  const pv = PREV && PREV.map[normT(t.title)];
+  const el = playing ? Math.floor((Date.now() - D.playing.at) / 1000) : 0;
+  return `${showDisc ? `<div style="padding:10px 12px 0;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:1px">DİSK ${t.disc}</div>` : ''}
+  <div class="trk ${t.skip ? 'skip' : ''} ${playing ? 'playing' : ''}" data-i="${i}">
+    <div class="top">
+      <button class="no" data-play aria-label="Şu an çalıyor">${playing ? EQ : pad(t.n || i + 1)}</button>
+      <span class="nm">${esc(t.title)}${pv != null ? `<span class="pv">önceki puanın ${fmtScore(pv)}</span>` : ''}</span>
+      <span class="du">${playing ? '▶ ' + fmtSec(el) : fmtMs(t.ms)}</span>
+      <button class="ic ${t.note ? 'has' : ''}" data-note aria-label="Not">${ICON.note}</button>
+      <button class="ic fire ${(t.moments || []).length ? 'has' : ''}" data-fire aria-label="Riff anı">${ICON.fire}</button>
+      <button class="ic ${t.fav ? 'fav' : ''}" data-fav aria-label="Favori">${ICON.star(t.fav)}</button>
+      ${t.custom ? `<button class="ic" data-del aria-label="Sil">✕</button>` : ''}
+    </div>
+    <div class="rate">
+      <button class="sk ${t.skip ? 'on' : ''}" data-s="skip" title="Atla / intro" style="${t.skip ? 'background:#3a3a42' : ''}">–</button>
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => rateBtn(n, t)).join('')}
+    </div>
+    <div class="moments">${(t.moments || []).map((m, k) => `<span class="mchip">🔥 ${m.t != null ? fmtSec(m.t) : ''}${m.note ? (m.t != null ? ' · ' : '') + esc(m.note) : ''}<button data-mdel="${k}" aria-label="Sil">✕</button></span>`).join('')}</div>
+    <div class="note ${t.note ? '' : 'hidden'}"><textarea class="field" placeholder="Bu şarkı hakkında kısa not…">${esc(t.note)}</textarea></div>
+  </div>`;
+}
+function rateBtn(n, t) {
+  const on = t.score === n, fill = t.score != null && n < t.score;
+  const c = scoreColor(t.score);
+  const style = on ? `background:${c};` : fill ? `background:${c}33;border-color:${c}55;` : '';
+  return `<button class="${on ? 'on' : ''} ${fill ? 'fill' : ''}" data-s="${n}" style="${style}">${n}</button>`;
+}
+function updateRow(row, t) {
+  row.classList.toggle('skip', t.skip);
+  const sk = $('[data-s="skip"]', row); sk.classList.toggle('on', t.skip); sk.style.background = t.skip ? '#3a3a42' : '';
+  $$('[data-s]:not([data-s="skip"])', row).forEach(b => {
+    const n = +b.dataset.s, on = t.score === n, fill = t.score != null && n < t.score, c = scoreColor(t.score);
+    b.className = (on ? 'on ' : '') + (fill ? 'fill' : '');
+    b.style.background = on ? c : fill ? c + '33' : ''; b.style.borderColor = fill ? c + '55' : '';
+  });
+  const fv = $('[data-fav]', row); fv.classList.toggle('fav', t.fav); fv.innerHTML = ICON.star(t.fav);
+}
+function updateSummary() {
+  const D = S.draft; if (!D || !$('#pTxt')) return;
+  const ratable = D.tracks.filter(t => !t.skip);
+  const rated = ratable.filter(t => t.score != null).length;
+  const avg = trackAvg(D.tracks);
+  const fin = D.albumScore != null ? D.albumScore : avg;
+  $('#pTxt').textContent = `${rated}/${ratable.length} şarkı puanlandı`;
+  $('#pAvg').textContent = avg != null ? `Şarkı ort. ${fmtScore(avg)}` : '';
+  $('#pBar').style.width = (ratable.length ? rated / ratable.length * 100 : 0) + '%';
+  const big = $('#fBig'); big.textContent = fmtScore(fin); big.style.color = fin != null ? scoreColor(fin) : 'var(--dim)';
+  $('#fSub').textContent = D.albumScore != null ? `Kendi puanın · şarkı ortalaması ${fmtScore(avg)}` : (avg != null ? 'Şarkı ortalaması (kaydırarak kendi puanını ver)' : 'Şarkıları puanladıkça hesaplanır');
+  $('#fRange').value = fin != null ? Math.round(fin * 2) / 2 : 5;
+  $('#fAuto').classList.toggle('hidden', D.albumScore == null);
+  $('#sbAvg').textContent = fmtScore(fin); $('#sbAvg').style.color = fin != null ? scoreColor(fin) : 'var(--dim)';
+  $('#sbL').textContent = `${rated}/${ratable.length} şarkı`;
+}
+let _pd;
+function persistDraft() { clearTimeout(_pd); _pd = setTimeout(save, 150); }
+function removeSavebar() { const b = $('#savebar'); if (b) b.remove(); }
+async function saveSession() {
+  const D = S.draft;
+  const ratable = D.tracks.filter(t => !t.skip);
+  const rated = ratable.filter(t => t.score != null).length;
+  if (!rated && D.albumScore == null) { toast('En az bir şarkıya puan ver'); return; }
+  if (rated < ratable.length) {
+    const ok = await dialog({ title: 'Bazı şarkılar puansız', text: `${ratable.length - rated} şarkıya puan vermedin. Yine de kaydedilsin mi?`, ok: 'Kaydet', cancel: 'Geri dön' });
+    if (!ok) return;
+  }
+  const old = S.logs.find(l => l.id === D.id);
+  const log = { id: D.id, date: D.date, createdAt: D.createdAt, savedAt: old ? (old.savedAt || Date.now()) : Date.now(), album: D.album, tracks: D.tracks, albumScore: D.albumScore, note: D.note.trim(), tags: D.tags, medium: D.medium || '' };
+  const k = S.logs.findIndex(l => l.id === log.id);
+  if (k >= 0) S.logs[k] = log; else S.logs.push(log);
+  S.queue = S.queue.filter(q => albumKey(q.album) !== albumKey(log.album));
+  if (D.medium) S.settings.lastMedium = D.medium;
+  const wasEdit = D.editing;
+  S.draft = null; save();
+  vib();
+  toast(wasEdit ? 'Güncellendi ✓' : `Kaydedildi 🤘 ${fmtScore(finalScore(log))}`);
+  go(wasEdit ? 'gunluk' : 'bugun');
+  if (!wasEdit) setTimeout(() => openDetail(log.id), 350);
+  resolveCountries();
+  checkBadges();
+}
+
+/* =========================================================
+   SHEETS
+   ========================================================= */
+let sheetStack = [];
+function openSheet(title, bodyHtml, onMount, opts = {}) {
+  const scrim = document.createElement('div'); scrim.className = 'scrim';
+  const sh = document.createElement('div'); sh.className = 'sheet';
+  if (opts.full) sh.style.height = '92dvh';
+  sh.innerHTML = `<div class="grab"></div><div class="sh"><h3 lang="${opts.lang || 'tr'}">${esc(title)}</h3><button class="iconbtn" data-close aria-label="Kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="sb">${bodyHtml}</div>`;
+  document.body.append(scrim, sh);
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => { scrim.classList.add('on'); sh.classList.add('on'); });
+  let closed = false;
+  const close = () => {
+    if (closed) return; closed = true;
+    scrim.classList.remove('on'); sh.classList.remove('on');
+    setTimeout(() => { scrim.remove(); sh.remove(); }, 300);
+    sheetStack = sheetStack.filter(x => x !== close);
+    if (!sheetStack.length) document.body.style.overflow = '';
+    opts.onClose && opts.onClose();
+  };
+  sheetStack.push(close);
+  scrim.onclick = close; $('[data-close]', sh).onclick = close;
+  let y0 = null, dy = 0; const grab = $('.grab', sh), head = $('.sh', sh);
+  [grab, head].forEach(el => {
+    el.addEventListener('touchstart', e => { y0 = e.touches[0].clientY; sh.style.transition = 'none'; }, { passive: true });
+    el.addEventListener('touchmove', e => { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = `translateY(${dy}px)`; }, { passive: true });
+    el.addEventListener('touchend', () => { sh.style.transition = ''; sh.style.transform = ''; if (dy > 90) close(); y0 = null; dy = 0; });
+  });
+  const body = $('.sb', sh);
+  onMount && onMount(sh, close, body);
+  return close;
+}
+function closeAllSheets() { [...sheetStack].forEach(c => c()); }
+
+/* ---------- album search ---------- */
+function openSearch(mode, prefill) {
+  const src = S.settings.source || 'itunes';
+  const titles = { session: 'Albüm ara', queue: 'Sıraya ekle', collection: 'Rafa ekle' };
+  openSheet(titles[mode] || 'Albüm ara', `
+    <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input class="field" id="q" type="search" placeholder="Grup veya albüm: ör. Opeth Blackwater Park" autocomplete="off" enterkeyhint="search" value="${esc(prefill || '')}"></div>
+    <div class="chips" style="margin:12px 0 4px" id="srcChips">
+      <button class="chip ${src === 'itunes' ? 'on' : ''}" data-src="itunes">Apple Music</button>
+      <button class="chip ${src === 'deezer' ? 'on' : ''}" data-src="deezer">Deezer</button>
+    </div>
+    <div id="res"><div class="empty" style="padding:30px 10px"><div class="big">💿</div>Grup ya da albüm adını yaz.<br><span style="font-size:13px">Kapak ve şarkı listesi otomatik gelir.</span></div></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn sm ghost" id="manual" style="color:var(--mute)">Bulamadın mı? Elle ekle</button></div>
+  `, (sh, close) => {
+    const q = $('#q', sh), res = $('#res', sh);
+    let source = src, timer, seq = 0, results = [];
+    const run = async () => {
+      const term = q.value.trim();
+      if (term.length < 2) return;
+      const my = ++seq;
+      res.innerHTML = '<div class="spinner"></div>';
+      try {
+        let r = await API.search(term, source);
+        if (!r.length && source === 'itunes') { r = await API.search(term, 'deezer').catch(() => []); if (r.length) toast('Deezer\'da bulundu'); }
+        if (my !== seq) return;
+        results = r;
+        res.innerHTML = r.length ? r.map((a, i) => `<div class="lrow" data-pick="${i}">${coverHtml(a, '62px', 200)}
+          <div class="t"><div class="a">${esc(a.title)}</div><div class="b">${esc(a.artist)}</div>
+          <div class="c">${[a.year, a.trackCount ? a.trackCount + ' şarkı' : '', a.genre].filter(Boolean).map(esc).join(' · ')}${logsForAlbum(a).length ? ' · ✓ dinlendi' : ''}</div></div></div>`).join('')
+          : `<div class="empty">Sonuç yok. Diğer kaynağı dene veya elle ekle.</div>`;
+      } catch (e) {
+        if (my !== seq) return;
+        res.innerHTML = `<div class="empty">Bağlantı hatası. İnternetini kontrol edip tekrar dene.</div>`;
+      }
+    };
+    if (prefill) run(); else setTimeout(() => q.focus(), 320);
+    q.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 380); });
+    q.addEventListener('keydown', e => { if (e.key === 'Enter') { clearTimeout(timer); q.blur(); run(); } });
+    $('#srcChips', sh).addEventListener('click', e => {
+      const b = e.target.closest('[data-src]'); if (!b) return;
+      source = b.dataset.src; S.settings.source = source; save();
+      $$('[data-src]', sh).forEach(x => x.classList.toggle('on', x === b)); run();
+    });
+    res.addEventListener('click', async e => {
+      const row = e.target.closest('[data-pick]'); if (!row) return;
+      const album = { ...results[+row.dataset.pick] };
+      if (mode === 'queue') {
+        if (S.queue.some(x => albumKey(x.album) === albumKey(album))) { toast('Zaten sırada'); return; }
+        S.queue.push({ id: uid(), album, addedAt: Date.now() }); save(); toast('Sıraya eklendi'); close(); render(); return;
+      }
+      if (mode === 'collection') { close(); setTimeout(() => addToCollection(album), 300); return; }
+      row.style.opacity = .5;
+      try {
+        const tracks = await API.tracks(album);
+        if (!tracks.length) { row.style.opacity = 1; toast('Şarkı listesi gelmedi, başka sürümü dene'); return; }
+        await startSession(album, tracks); close();
+      } catch (err) { row.style.opacity = 1; toast('Şarkılar yüklenemedi, tekrar dene'); }
+    });
+    $('#manual', sh).onclick = () => { close(); setTimeout(() => openManual(mode), 320); };
+  }, { full: true });
+}
+async function startSession(album, tracks) {
+  if (S.draft && !(await dialog({ title: 'Açık bir seans var', text: `"${S.draft.album.title}" seansı yarım kalmış. Onu bırakıp yenisine başlansın mı?`, ok: 'Yeni başlat', cancel: 'Vazgeç' }))) return;
+  S.draft = newDraft(album, tracks);
+  save(); go('bugun');
+}
+
+/* ---------- manual entry ---------- */
+function openManual(mode) {
+  const needTracks = mode === 'session';
+  openSheet('Elle ekle', `
+    <label class="lbl">Grup</label><input class="field" id="mA" placeholder="ör. Katatonia">
+    <label class="lbl">Albüm</label><input class="field" id="mT" placeholder="ör. Brave Murder Day">
+    <div style="display:flex;gap:10px"><div style="flex:1"><label class="lbl">Yıl</label><input class="field" id="mY" inputmode="numeric" placeholder="1996"></div>
+    <div style="flex:1"><label class="lbl">Tür</label><input class="field" id="mG" placeholder="Doom Metal"></div></div>
+    <label class="lbl">Kapak (isteğe bağlı)</label><input class="field" id="mC" type="file" accept="image/*">
+    ${needTracks ? `<label class="lbl">Şarkılar — her satıra bir tane</label><textarea class="field" id="mS" rows="8" placeholder="Brave&#10;Murder&#10;Day&#10;…"></textarea>` : ''}
+    <button class="btn red block" id="mGo" style="margin-top:18px">${needTracks ? 'Seansı başlat' : 'Ekle'}</button>
+  `, (sh, close) => {
+    let coverData = null;
+    $('#mC', sh).addEventListener('change', async e => { const f = e.target.files[0]; if (f) coverData = await shrinkImage(f, 500); });
+    $('#mGo', sh).onclick = async () => {
+      const artist = $('#mA', sh).value.trim(), title = $('#mT', sh).value.trim();
+      if (!artist || !title) { toast('Grup ve albüm adı gerekli'); return; }
+      const album = { source: 'manual', sourceId: uid(), artist, title, year: +$('#mY', sh).value || null, genre: $('#mG', sh).value.trim(), cover: coverData, thumb: coverData, url: null };
+      if (mode === 'queue') { S.queue.push({ id: uid(), album, addedAt: Date.now() }); save(); close(); render(); toast('Sıraya eklendi'); return; }
+      if (mode === 'collection') { close(); setTimeout(() => addToCollection(album), 300); return; }
+      const lines = $('#mS', sh).value.split('\n').map(s => s.trim()).filter(Boolean);
+      if (!lines.length) { toast('En az bir şarkı yaz'); return; }
+      album.trackCount = lines.length;
+      close(); await startSession(album, lines.map((t, i) => ({ n: i + 1, disc: 1, title: t.replace(/^\d+[.)\-\s]+/, ''), ms: 0 })));
+    };
+  });
+}
+function shrinkImage(file, max, q = .8) {
+  return new Promise(res => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg', q));
+    };
+    img.onerror = () => res(null); img.src = url;
+  });
+}
+
+/* ---------- log detail ---------- */
+function openDetail(id) {
+  const l = S.logs.find(x => x.id === id); if (!l) return;
+  const a = l.album, fin = finalScore(l), avg = trackAvg(l.tracks);
+  const rated = l.tracks.filter(t => t.score != null && !t.skip);
+  const best = [...rated].sort((x, y) => y.score - x.score)[0];
+  const q = enc(`${a.artist} ${a.title}`);
+  const hist = S.logs.filter(x => albumKey(x.album) === albumKey(a)).sort((x, y) => x.date.localeCompare(y.date) || x.createdAt - y.createdAt);
+  const owned = S.collection.find(c => albumKey(c.album) === albumKey(a));
+  const ctry = countryOf(a.artist);
+  const moments = l.tracks.flatMap((t, i) => (t.moments || []).map(m => ({ ...m, t2: t.title, n: t.n || i + 1 })));
+  const ccOpts = [...new Set([...(ctry ? [ctry] : []), ...COMMON_CC])].sort((x, y) => trName(x).localeCompare(trName(y), 'tr'));
+  openSheet(fmtDate(l.date), `
+    <div style="display:flex;gap:14px;align-items:flex-end">
+      ${coverHtml(a, '128px', 600)}
+      <div style="flex:1;min-width:0">
+        <div lang="en" style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:22px;line-height:1.1;text-transform:uppercase">${esc(a.title)}</div>
+        <div style="color:var(--red2);font-weight:700;margin-top:4px">${esc(a.artist)}</div>
+        <div class="muted" style="font-size:13px;margin-top:4px">${[a.year, a.genre].filter(Boolean).map(esc).join(' · ')}</div>
+        <div class="muted" style="font-size:12px;margin-top:2px">${esc(fmtDay(l.date))}${l.medium ? ' · ' + esc((MEDIUMS.find(m => m[0] === l.medium) || [, l.medium])[1]) : ''}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:34px;font-weight:700;color:${scoreColor(fin)}">${fmtScore(fin)}</div><div class="muted" style="font-size:12px">Albüm puanı</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:34px;font-weight:700">${fmtScore(avg)}</div><div class="muted" style="font-size:12px">Şarkı ort.</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:34px;font-weight:700">${moments.length}</div><div class="muted" style="font-size:12px">Riff anı</div></div>
+    </div>
+    ${(l.tags || []).length ? `<div class="chips" style="margin-top:14px">${l.tags.map(t => `<span class="chip on">${esc(t)}</span>`).join('')}</div>` : ''}
+    ${l.note ? `<div class="card" style="padding:14px;margin-top:14px;font-style:italic;color:#ddd">“${esc(l.note)}”</div>` : ''}
+    <div id="dWiki"></div>
+    <div class="card" style="padding:4px 14px;margin-top:14px">
+      <div class="kv"><span>Ülke</span><span>${ctry ? flag(ctry) + ' ' : ''}<select class="sel-inline" id="dCountry"><option value="">${ctry === undefined ? 'aranıyor…' : 'bilinmiyor'}</option>${ccOpts.map(c => `<option value="${c}" ${c === ctry ? 'selected' : ''}>${esc(trName(c))}</option>`).join('')}</select></span></div>
+      ${best ? `<div class="kv"><span>En yüksek</span><span><b>${esc(best.title)}</b> · ${fmtScore(best.score)}</span></div>` : ''}
+      ${owned ? `<div class="kv"><span>Rafında</span><span>${owned.status === 'owned' ? '📦 ' + esc(owned.format) : '💭 İstek listesinde'}</span></div>` : ''}
+    </div>
+    ${hist.length > 1 ? `<div class="h-sec">Bu albümün geçmişi 🔁</div><div class="card" style="padding:4px 14px">${hist.map((h, i) => {
+      const s = finalScore(h), p = i ? finalScore(hist[i - 1]) : null, dlt = p != null && s != null ? s - p : null;
+      return `<div class="kv"><span>${fmtDate(h.date)}${h.id === l.id ? ' · bu' : ''}</span><span><b style="color:${scoreColor(s)}">${fmtScore(s)}</b>${dlt ? ` <span style="color:${dlt > 0 ? '#4ade80' : '#f87171'};font-size:12px">${dlt > 0 ? '▲' : '▼'} ${fmtScore(Math.abs(dlt))}</span>` : ''}</span></div>`;
+    }).join('')}</div>` : ''}
+    ${moments.length ? `<div class="h-sec">Riff anları 🔥</div><div class="moments">${moments.map(m => `<span class="mchip ro">${pad(m.n)} · ${esc(m.t2)}${m.t != null ? ' @ ' + fmtSec(m.t) : ''}${m.note ? ' — ' + esc(m.note) : ''}</span>`).join('')}</div>` : ''}
+    <div class="h-sec">Şarkılar</div>
+    <div class="card">${l.tracks.map((t, i) => `<div class="trk ${t.skip ? 'skip' : ''}" style="padding:11px 12px">
+      <div class="top"><span class="no">${pad(t.n || i + 1)}</span><span class="nm">${t.fav ? '⭐ ' : ''}${esc(t.title)}${(t.moments || []).length ? ' <span style="color:var(--ember)">🔥</span>' : ''}</span><span class="du">${fmtMs(t.ms)}</span>
+      ${t.skip ? '<span class="muted" style="font-size:12px;width:42px;text-align:center">atla</span>' : badge(t.score)}</div>
+      ${t.note ? `<div class="notetxt">${esc(t.note)}</div>` : ''}</div>`).join('')}</div>
+    <div class="links" style="margin-top:16px">
+      <a class="chip" href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">▶ Spotify</a>
+      <a class="chip" href="${a.source === 'itunes' && a.url ? esc(a.url) : 'https://music.apple.com/search?term=' + q}" target="_blank" rel="noopener"> Apple Music</a>
+      <a class="chip" href="https://music.youtube.com/search?q=${q}" target="_blank" rel="noopener">▶ YouTube</a>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn block red" id="dStory">📸 Story görseli</button>
+      <button class="btn block" id="dAgain">🔁 Yeniden dinle</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="btn block" id="dEdit">Düzenle</button>
+      <button class="btn block" id="dShare">Metni paylaş</button>
+      <button class="btn" id="dDel" style="color:var(--red2)">Sil</button>
+    </div>
+  `, (sh, close) => {
+    mountWikiCard($('#dWiki', sh), a);
+    $('#dCountry', sh).onchange = e => {
+      const v = e.target.value; S.meta.countries[normA(a.artist)] = { c: v || null, t: Date.now(), manual: true }; save(); toast('Ülke kaydedildi'); checkBadges();
+    };
+    $('#dEdit', sh).onclick = async () => {
+      if (S.draft && !S.draft.editing && !(await dialog({ title: 'Açık seans var', text: 'Yarım kalan seans silinecek. Devam edilsin mi?', ok: 'Devam' }))) return;
+      S.draft = newDraft(l.album, JSON.parse(JSON.stringify(l.tracks)), { id: l.id, editing: true, date: l.date, createdAt: l.createdAt, albumScore: l.albumScore, note: l.note, tags: [...(l.tags || [])], medium: l.medium });
+      save(); go('bugun');
+    };
+    $('#dAgain', sh).onclick = () => {
+      const tracks = l.tracks.map(t => ({ n: t.n, disc: t.disc, title: t.title, ms: t.ms, custom: t.custom }));
+      startSession({ ...l.album }, tracks);
+    };
+    $('#dDel', sh).onclick = async () => {
+      if (!(await dialog({ title: 'Kaydı sil?', text: `${a.title} — ${fmtDateShort(l.date)} kaydı kalıcı olarak silinecek.`, ok: 'Sil' }))) return;
+      S.logs = S.logs.filter(x => x.id !== l.id); save(); close(); render(); toast('Silindi');
+    };
+    $('#dShare', sh).onclick = async () => {
+      const lines = [`🤘 ${a.artist} — ${a.title}${a.year ? ` (${a.year})` : ''}`, `Puanım: ${fmtScore(fin)}/10`, ''];
+      l.tracks.forEach((t, i) => { if (!t.skip) lines.push(`${pad(t.n || i + 1)}. ${t.title} — ${t.score != null ? fmtScore(t.score) : '–'}${t.fav ? ' ⭐' : ''}`); });
+      if (l.note) lines.push('', `“${l.note}”`);
+      shareText(lines.join('\n'));
+    };
+    $('#dStory', sh).onclick = () => showStory(`${a.artist} — ${a.title}`, (x, img) => drawAlbumStory(x, img, l), `ritual-${normA(a.artist)}-${normT(a.title)}.png`);
+  }, { full: true });
+}
+async function shareText(text) {
+  try { if (navigator.share) { await navigator.share({ text }); return; } } catch (e) { if (e.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text); toast('Panoya kopyalandı'); } catch (e) { toast('Kopyalanamadı'); }
+}
+
+/* =========================================================
+   JOURNAL
+   ========================================================= */
+function renderJournal(app) {
+  const logs = sortedLogs();
+  if (!ui.calMonth) { const d = new Date(); ui.calMonth = [d.getFullYear(), d.getMonth()]; }
+  let body = '';
+  if (!logs.length) body = `<div class="empty"><div class="big">📖</div>Henüz kayıt yok. İlk albümünü dinleyip puanla.</div>`;
+  else if (ui.journalMode === 'liste') {
+    let cur = '';
+    const mKey = l => parseYmd(l.date).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+    const counts = {}; logs.forEach(l => { const m = mKey(l); counts[m] = (counts[m] || 0) + 1; });
+    for (const l of logs) {
+      const m = mKey(l);
+      if (m !== cur) { body += `<div class="h-sec">${esc(m)} <span style="color:var(--dim);font-family:Inter;letter-spacing:0;text-transform:none">${counts[m]} albüm</span></div>`; cur = m; }
+      body += logRow(l);
+    }
+  } else if (ui.journalMode === 'kapak') {
+    body = `<div class="grid3" style="margin-top:12px">${logs.map(l => `<div class="g" data-open="${l.id}">${coverHtml(l.album, '100%', 200)}${badge(finalScore(l))}</div>`).join('')}</div>`;
+  } else {
+    const [y, m] = ui.calMonth;
+    const first = new Date(y, m, 1), days = new Date(y, m + 1, 0).getDate();
+    const off = (first.getDay() + 6) % 7;
+    const by = logsByDate();
+    const title = first.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+    const monthLogs = logs.filter(l => { const d = parseYmd(l.date); return d.getFullYear() === y && d.getMonth() === m; });
+    const mAvg = monthLogs.length ? monthLogs.reduce((s, l) => s + (finalScore(l) || 0), 0) / monthLogs.length : null;
+    let cells = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'].map(d => `<div class="wd">${d}</div>`).join('');
+    for (let i = 0; i < off; i++) cells += `<div class="c out"></div>`;
+    for (let d = 1; d <= days; d++) {
+      const k = `${y}-${pad(m + 1)}-${pad(d)}`; const ls = by[k] || [];
+      const img = ls[0] && (ls[0].album.thumb || ls[0].album.cover);
+      cells += `<div class="c ${ls.length ? 'has' : ''} ${k === today() ? 'today' : ''}" ${ls.length ? `data-day="${k}"` : ''}>${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ''}<span class="dn">${d}</span>${ls.length > 1 ? `<span class="cnt">${ls.length}</span>` : ''}</div>`;
+    }
+    body = `<div class="cal-h"><button class="iconbtn" id="cPrev">‹</button><div style="text-align:center"><h3>${esc(title)}</h3>
+      <div class="muted" style="font-size:12px">${monthLogs.length} albüm${mAvg != null ? ' · ort. ' + fmtScore(mAvg) : ''}</div></div><button class="iconbtn" id="cNext">›</button></div>
+      <div class="cal">${cells}</div>`;
+    if (monthLogs.length) {
+      const top = [...monthLogs].sort((a, b) => (finalScore(b) || 0) - (finalScore(a) || 0))[0];
+      body += `<div class="h-sec">Ayın albümü 👑</div>${logRow(top)}`;
+    }
+  }
+  app.innerHTML = `<div class="view">${segHtml('seg', [['liste', 'Liste'], ['kapak', 'Kapaklar'], ['takvim', 'Takvim']], ui.journalMode)}${body}</div>`;
+  bindSeg('seg', k => { ui.journalMode = k; render(); });
+  if ($('#cPrev')) {
+    $('#cPrev').onclick = () => { let [y, m] = ui.calMonth; m--; if (m < 0) { m = 11; y--; } ui.calMonth = [y, m]; render(); };
+    $('#cNext').onclick = () => { let [y, m] = ui.calMonth; m++; if (m > 11) { m = 0; y++; } ui.calMonth = [y, m]; render(); };
+    $$('[data-day]').forEach(c => c.onclick = () => {
+      const ls = logsByDate()[c.dataset.day];
+      if (ls.length === 1) openDetail(ls[0].id);
+      else openSheet(fmtDate(c.dataset.day), ls.map(logRow).join(''), sh => $$('[data-open]', sh).forEach(el => el.onclick = () => openDetail(el.dataset.open)));
+    });
+  }
+  bindCommon(app);
+}
+
+/* =========================================================
+   KEŞFET: queue · journeys · recommendations · badges
+   ========================================================= */
+function renderKesfet(app) {
+  const segs = [['sira', 'Sıradakiler'], ['yolculuk', 'Yolculuk'], ['oneri', 'Öneriler'], ['rozet', 'Rozetler']];
+  app.innerHTML = `<div class="view">${segHtml('kseg', segs, ui.kesfet, 'sm')}<div id="kbody"></div></div>`;
+  bindSeg('kseg', k => { ui.kesfet = k; render(); });
+  const body = $('#kbody');
+  if (ui.kesfet === 'sira') renderQueue(body);
+  else if (ui.kesfet === 'yolculuk') renderJourneys(body);
+  else if (ui.kesfet === 'oneri') renderRecs(body);
+  else renderBadges(body);
+}
+
+/* ---------- queue ---------- */
+function renderQueue(el) {
+  const Q = S.queue;
+  el.innerHTML = `
+    <div class="hero" style="text-align:center;margin-top:10px">
+      <div class="dice" id="dice">🎲</div>
+      <h1 style="font-size:24px;margin-top:6px">Bu akşam ne dinlesem?</h1>
+      <p>${Q.length ? `Sırada ${Q.length} albüm var. Kararı zara bırak.` : 'Dinlemek istediğin albümleri buraya ekle, sonra rastgele seç.'}</p>
+      <div class="row">
+        ${Q.length ? `<button class="btn red" id="roll">Rastgele seç</button>` : ''}
+        <button class="btn" id="qAdd">+ Albüm ekle</button>
+      </div>
+      <div id="picked"></div>
+    </div>
+    ${Q.length ? `<div class="h-sec">Sıradakiler · ${Q.length}</div>
+      <div>${Q.map(x => `<div class="lrow">${coverHtml(x.album, '56px', 120)}<div class="t"><div class="a">${esc(x.album.title)}</div><div class="b">${esc(x.album.artist)}${x.album.year ? ' · ' + x.album.year : ''}</div></div>
+        <button class="btn sm red" data-qs="${x.id}">Başla</button><button class="iconbtn" data-qd="${x.id}" style="width:36px;height:36px;color:var(--mute)" aria-label="Kaldır">✕</button></div>`).join('')}</div>` : ''}`;
+  $('#qAdd').onclick = () => openSearch('queue');
+  if ($('#roll')) $('#roll').onclick = () => {
+    const d = $('#dice'); d.classList.remove('roll'); void d.offsetWidth; d.classList.add('roll'); vib();
+    setTimeout(() => {
+      const x = Q[Math.floor(Math.random() * Q.length)];
+      $('#picked').innerHTML = `<div class="card pick" style="text-align:left">${coverHtml(x.album, '72px', 200)}<div style="flex:1;min-width:0"><div style="font-weight:800">${esc(x.album.title)}</div><div class="muted" style="font-size:13px">${esc(x.album.artist)}</div></div><button class="btn sm red" data-qs="${x.id}">Başla</button></div>`;
+      bindQ();
+    }, 600);
+  };
+  bindQ();
+  function bindQ() {
+    $$('[data-qs]', el).forEach(b => b.onclick = ev => {
+      ev.stopPropagation();
+      const x = S.queue.find(q => q.id === b.dataset.qs); if (!x) return;
+      if (x.album.source === 'manual') { openManualTracks(x.album); return; }
+      startFromAlbum(x.album, b);
+    });
+    $$('[data-qd]', el).forEach(b => b.onclick = ev => { ev.stopPropagation(); S.queue = S.queue.filter(q => q.id !== b.dataset.qd); save(); render(); });
+  }
+}
+async function openManualTracks(album) {
+  openSheet('Şarkıları yaz', `<div class="muted" style="font-size:14px">${esc(album.artist)} — ${esc(album.title)}</div>
+    <label class="lbl">Şarkılar — her satıra bir tane</label><textarea class="field" id="mS" rows="10"></textarea>
+    <button class="btn red block" id="mGo" style="margin-top:16px">Seansı başlat</button>`, (sh, close) => {
+    $('#mGo', sh).onclick = async () => {
+      const lines = $('#mS', sh).value.split('\n').map(s => s.trim()).filter(Boolean);
+      if (!lines.length) { toast('En az bir şarkı yaz'); return; }
+      close(); await startSession({ ...album }, lines.map((t, i) => ({ n: i + 1, disc: 1, title: t.replace(/^\d+[.)\-\s]+/, ''), ms: 0 })));
+    };
+  });
+}
+
+/* ---------- journeys ---------- */
+function collage(albums) {
+  const imgs = albums.filter(a => a.thumb || a.cover).slice(0, 4);
+  if (!imgs.length) return `<div class="collage" style="display:grid;place-items:center;color:var(--dim)">${PH}</div>`;
+  if (imgs.length < 4) return `<div class="collage" style="display:block"><img src="${esc(imgs[0].thumb || imgs[0].cover)}" alt=""></div>`;
+  return `<div class="collage">${imgs.map(a => `<img src="${esc(a.thumb || a.cover)}" alt="" loading="lazy">`).join('')}</div>`;
+}
+function renderJourneys(el) {
+  const J = [...S.journeys].sort((a, b) => (b.lastAt || b.createdAt) - (a.lastAt || a.createdAt));
+  el.innerHTML = `
+    <div class="card" style="padding:16px;margin-top:10px">
+      <div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:20px;text-transform:uppercase">📚 Diskografi yolculuğu</div>
+      <div class="muted" style="font-size:13px;margin-top:4px">Bir grubun bütün stüdyo albümlerini sırayla dinle. Bitirince diskografinin senin sıralamanı görürsün.</div>
+      <button class="btn red block" id="jNew" style="margin-top:12px">+ Yeni yolculuk</button>
+    </div>
+    ${J.length ? `<div class="h-sec">Yolculukların</div>${J.map(j => {
+      const st = journeyStatus(j);
+      return `<div class="card jcard" data-j="${j.id}">${collage(j.albums.filter(a => !a.excluded))}<div class="t"><div class="a" lang="en">${esc(j.artist)}</div>
+        <div class="b">${st.complete ? '✅ Tamamlandı' : `${st.done}/${st.total} albüm · sıradaki: ${esc(st.next ? st.next.a.title : '')}`}</div>
+        <div class="prog" style="margin-top:8px"><i style="width:${st.total ? st.done / st.total * 100 : 0}%"></i></div></div></div>`;
+    }).join('')}` : `<div class="empty"><div class="big">🧭</div>Henüz yolculuk yok. Bir grup seç ve başla.</div>`}`;
+  $('#jNew').onclick = openNewJourney;
+  $$('[data-j]', el).forEach(c => c.onclick = () => openJourney(c.dataset.j));
+}
+function openNewJourney(prefill) {
+  openSheet('Yeni yolculuk', `
+    <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input class="field" id="jq" type="search" placeholder="Grup adı: ör. Opeth" autocomplete="off" enterkeyhint="search" value="${esc(typeof prefill === 'string' ? prefill : '')}"></div>
+    <div class="chips" style="margin:12px 0 4px" id="jsrc"><button class="chip on" data-src="itunes">Apple Music</button><button class="chip" data-src="deezer">Deezer</button></div>
+    <div id="jres"></div>`, (sh, close) => {
+    const q = $('#jq', sh), res = $('#jres', sh);
+    let source = 'itunes', timer, seq = 0, arts = [];
+    const run = async () => {
+      const term = q.value.trim(); if (term.length < 2) return;
+      const my = ++seq; res.innerHTML = '<div class="spinner"></div>';
+      try {
+        arts = await API.artists(term, source);
+        if (my !== seq) return;
+        res.innerHTML = arts.length ? arts.map((a, i) => `<div class="lrow" data-a="${i}">${a.picture ? `<div class="cover" style="width:52px;height:52px;border-radius:50%"><img src="${esc(a.picture)}" alt=""></div>` : `<div class="cover ph" style="width:52px;height:52px;border-radius:50%">${PH}</div>`}
+          <div class="t"><div class="a">${esc(a.name)}</div><div class="b">${esc(a.sub)}</div></div></div>`).join('') : '<div class="empty">Grup bulunamadı.</div>';
+      } catch (e) { if (my === seq) res.innerHTML = '<div class="empty">Bağlantı hatası.</div>'; }
+    };
+    if (q.value) run(); else setTimeout(() => q.focus(), 320);
+    q.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 380); });
+    q.addEventListener('keydown', e => { if (e.key === 'Enter') { q.blur(); run(); } });
+    $('#jsrc', sh).onclick = e => { const b = e.target.closest('[data-src]'); if (!b) return; source = b.dataset.src; $$('[data-src]', sh).forEach(x => x.classList.toggle('on', x === b)); run(); };
+    res.addEventListener('click', async e => {
+      const row = e.target.closest('[data-a]'); if (!row) return;
+      const ar = arts[+row.dataset.a];
+      res.innerHTML = '<div class="spinner"></div><div class="empty" style="padding-top:0">Diskografi yükleniyor…</div>';
+      try {
+        const albums = await API.discography(ar);
+        if (!albums.length) { res.innerHTML = '<div class="empty">Albüm bulunamadı. Diğer kaynağı dene.</div>'; return; }
+        pickAlbums(res, ar, albums, close);
+      } catch (err) { res.innerHTML = '<div class="empty">Diskografi yüklenemedi, tekrar dene.</div>'; }
+    });
+  }, { full: true });
+}
+function pickAlbums(res, ar, albums, close) {
+  const draw = () => {
+    const n = albums.filter(a => !a.excluded).length;
+    res.innerHTML = `<div style="margin:10px 2px 6px;font-weight:800;font-size:18px">${esc(ar.name)}</div>
+      <div class="muted" style="font-size:13px;margin-bottom:8px">Canlı albümler, derlemeler ve EP'ler varsayılan olarak çıkarıldı. Dokunarak ekle/çıkar.</div>
+      <div class="card" style="padding:2px 10px">${albums.map((a, i) => `<div class="jalb ${a.excluded ? 'ex' : ''}" data-t="${i}">${coverHtml(a, '46px', 120)}<div class="t"><div class="a">${esc(a.title)}</div><div class="b">${a.year || '?'}${a.trackCount ? ' · ' + a.trackCount + ' şarkı' : ''}${logsForAlbum(a).length ? ' · ✓ dinlendi' : ''}</div></div><span class="chk ${a.excluded ? '' : 'on'}">${a.excluded ? '' : '✓'}</span></div>`).join('')}</div>
+      <button class="btn red block" id="jGo" style="margin-top:14px;position:sticky;bottom:10px">Yolculuğa başla · ${n} albüm</button>`;
+    $$('[data-t]', res).forEach(r => r.onclick = () => { const a = albums[+r.dataset.t]; a.excluded = !a.excluded; const y = res.parentNode.scrollTop; draw(); res.parentNode.scrollTop = y; });
+    $('#jGo', res).onclick = () => {
+      if (!albums.some(a => !a.excluded)) { toast('En az bir albüm seç'); return; }
+      const ex = S.journeys.find(j => normA(j.artist) === normA(ar.name));
+      const j = { id: ex ? ex.id : uid(), artist: ar.name, source: ar.source, artistId: ar.artistId, albums, createdAt: ex ? ex.createdAt : Date.now(), lastAt: Date.now() };
+      S.journeys = S.journeys.filter(x => x.id !== j.id).concat(j); save();
+      close(); render(); setTimeout(() => openJourney(j.id), 320); checkBadges();
+    };
+  };
+  draw();
+}
+function openJourney(id) {
+  const j = S.journeys.find(x => x.id === id); if (!j) return;
+  const st = journeyStatus(j);
+  const ranked = st.items.filter(x => x.score != null).sort((a, b) => b.score - a.score);
+  openSheet(j.artist, `
+    <div class="card" style="padding:14px">
+      <div style="display:flex;justify-content:space-between;font-weight:700"><span>${st.complete ? '✅ Diskografi tamamlandı!' : `${st.done}/${st.total} albüm dinlendi`}</span><span style="color:var(--ember)">%${st.total ? Math.round(st.done / st.total * 100) : 0}</span></div>
+      <div class="prog" style="margin-top:10px"><i style="width:${st.total ? st.done / st.total * 100 : 0}%"></i></div>
+    </div>
+    <div class="h-sec">Albümler</div>
+    <div class="card" style="padding:2px 10px">${st.items.map(x => `<div class="jalb" ${x.logs.length ? `data-open="${x.logs[0].id}"` : ''}>${coverHtml(x.a, '50px', 120)}<div class="t"><div class="a">${esc(x.a.title)}</div><div class="b">${x.a.year || '?'}${x.logs.length ? ' · ' + fmtDateShort(x.logs[0].date) : ''}</div></div>
+      ${x.logs.length ? badge(x.score) : (x === st.next ? `<button class="btn sm red" data-start="${esc(x.a.sourceId)}">Başla</button>` : `<button class="btn sm" data-start="${esc(x.a.sourceId)}">Dinle</button>`)}</div>`).join('')}</div>
+    ${ranked.length >= 2 ? `<div class="h-sec">${st.complete ? 'Senin diskografi sıralaman 👑' : 'Şu ana kadarki sıralaman'}</div>
+      <div class="card" style="padding:4px 10px">${ranked.map((x, i) => `<div class="rank"><span class="p">${i + 1}</span>${coverHtml(x.a, '40px', 120)}<div class="t"><div class="a">${esc(x.a.title)}</div><div class="b">${x.a.year || ''}</div></div>${badge(x.score)}</div>`).join('')}</div>` : ''}
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn block" id="jEdit">Albümleri düzenle</button>
+      <button class="btn" id="jDel" style="color:var(--red2)">Sil</button>
+    </div>`, (sh, close) => {
+    bindCommon(sh);
+    $$('[data-start]', sh).forEach(b => b.onclick = ev => { ev.stopPropagation(); const a = j.albums.find(x => x.sourceId === b.dataset.start); j.lastAt = Date.now(); save(); startFromAlbum(a, b, j); });
+    $('#jEdit', sh).onclick = () => {
+      close();
+      setTimeout(() => openSheet('Albümleri düzenle', '<div id="jres"></div>', (sh2, close2) => {
+        const albums = j.albums.map(a => ({ ...a }));
+        pickAlbums($('#jres', sh2), { name: j.artist, source: j.source, artistId: j.artistId }, albums, close2);
+      }, { full: true }), 320);
+    };
+    $('#jDel', sh).onclick = async () => {
+      if (!(await dialog({ title: 'Yolculuğu sil?', text: 'Dinleme kayıtların silinmez, sadece yolculuk listesi kalkar.', ok: 'Sil' }))) return;
+      S.journeys = S.journeys.filter(x => x.id !== j.id); save(); close(); render();
+    };
+  }, { full: true, lang: 'en' });
+}
+
+/* ---------- recommendations ---------- */
+function renderRecs(el) {
+  const R = S.meta.recs;
+  const hidden = new Set(S.meta.recsHidden);
+  const known = new Set([...S.logs.map(l => normA(l.album.artist)), ...S.queue.map(q => normA(q.album.artist))]);
+  const list = R ? R.list.filter(r => !hidden.has(normA(r.name)) && !known.has(normA(r.name))) : [];
+  const seeds = topSeeds();
+  el.innerHTML = `
+    <div class="card" style="padding:16px;margin-top:10px">
+      <div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:20px;text-transform:uppercase">🔮 Sana benzer gruplar</div>
+      <div class="muted" style="font-size:13px;margin-top:4px">${seeds.length ? `En sevdiğin gruplara (${seeds.slice(0, 3).map(s => esc(s.name)).join(', ')}${seeds.length > 3 ? '…' : ''}) benzeyen ama henüz dinlemediğin gruplar.` : 'Önce birkaç albüme 7+ puan ver, sonra zevkine göre öneri çıkarayım.'}</div>
+      ${seeds.length ? `<button class="btn red block" id="rGo" style="margin-top:12px">${R ? '↻ Önerileri yenile' : 'Önerileri getir'}</button>` : ''}
+      ${R ? `<div class="muted" style="font-size:11px;margin-top:8px;text-align:center">Son güncelleme: ${new Date(R.at).toLocaleDateString('tr-TR')} · Deezer</div>` : ''}
+    </div>
+    <div id="rList" style="margin-top:12px">${list.length ? `<div class="recs">${list.slice(0, 20).map(r => `<div class="card rec">
+      ${r.picture ? `<img src="${esc(r.picture)}" alt="" loading="lazy">` : `<div class="ph"></div>`}
+      <button class="x" data-hide="${esc(r.name)}" aria-label="Gizle">✕</button>
+      <div class="a">${esc(r.name)}</div><div class="b">${esc(r.because.slice(0, 2).join(' ve '))}${r.because.length > 2 ? ` +${r.because.length - 2}` : ''} sevdiğin için</div>
+      <button class="btn sm" data-albums="${esc(r.name)}">Albümleri</button>
+      <button class="btn sm ghost" data-journey="${esc(r.name)}" style="margin-top:4px;color:var(--mute)">Yolculuk başlat</button></div>`).join('')}</div>` : (R ? '<div class="empty">Yeni öneri kalmadı, yenilemeyi dene.</div>' : '')}</div>`;
+  if ($('#rGo')) $('#rGo').onclick = async () => {
+    const b = $('#rGo'); b.disabled = true; b.textContent = 'Benzer gruplar aranıyor…';
+    try { await buildRecs(seeds); render(); } catch (e) { toast('Öneriler alınamadı'); b.disabled = false; b.textContent = 'Tekrar dene'; }
+  };
+  $$('[data-hide]', el).forEach(b => b.onclick = () => { S.meta.recsHidden.push(normA(b.dataset.hide)); save(); render(); });
+  $$('[data-albums]', el).forEach(b => b.onclick = () => openSearch('queue', b.dataset.albums));
+  $$('[data-journey]', el).forEach(b => b.onclick = () => openNewJourney(b.dataset.journey));
+}
+function topSeeds() {
+  const m = {};
+  S.logs.forEach(l => { const s = finalScore(l); if (s == null) return; const k = normA(l.album.artist); (m[k] = m[k] || { name: l.album.artist, sum: 0, n: 0 }); m[k].sum += s; m[k].n++; });
+  return Object.values(m).map(x => ({ ...x, avg: x.sum / x.n })).filter(x => x.avg >= 7).sort((a, b) => b.avg * Math.sqrt(b.n) - a.avg * Math.sqrt(a.n)).slice(0, 8);
+}
+async function buildRecs(seeds) {
+  const agg = {};
+  for (const s of seeds) {
+    try {
+      const rel = await API.related(s.name);
+      rel.forEach((r, i) => {
+        const k = normA(r.name);
+        (agg[k] = agg[k] || { name: r.name, picture: r.picture, fans: r.fans, because: [], w: 0 });
+        if (!agg[k].because.includes(s.name)) agg[k].because.push(s.name);
+        agg[k].w += (15 - i) * s.avg;
+      });
+    } catch (e) {}
+  }
+  const list = Object.values(agg).sort((a, b) => b.because.length - a.because.length || b.w - a.w).slice(0, 40);
+  if (!list.length) throw new Error('empty');
+  S.meta.recs = { at: Date.now(), list }; save();
+}
+
+/* ---------- badges ---------- */
+function renderBadges(el) {
+  const B = badgeDefs(); const on = B.filter(b => b.on).length;
+  el.innerHTML = `
+    <div class="card" style="padding:16px;margin-top:10px;display:flex;align-items:center;gap:14px">
+      <div style="font-size:40px">🏅</div>
+      <div style="flex:1"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:24px">${on} / ${B.length} rozet</div>
+      <div class="prog" style="margin-top:8px"><i style="width:${on / B.length * 100}%"></i></div></div>
+    </div>
+    <div class="h-sec">Görevler & rozetler</div>
+    <div class="badges">${[...B].sort((a, b) => (b.on - a.on) || (b.cur / b.goal - a.cur / a.goal)).map(b => `<div class="card bdg ${b.on ? 'on' : ''}">
+      <div class="i">${b.i}</div><div class="n">${esc(b.n)}</div><div class="d">${esc(b.d)}</div>
+      <div class="pb"><i style="width:${b.cur / b.goal * 100}%"></i></div><div class="pt">${b.on ? 'Kazanıldı ✓' : `${b.cur} / ${b.goal}`}</div></div>`).join('')}</div>`;
+}
+
+/* =========================================================
+   RAF: collection · wishlist · concerts
+   ========================================================= */
+function renderRaf(app) {
+  app.innerHTML = `<div class="view">${segHtml('rseg', [['koleksiyon', 'Koleksiyon'], ['istek', 'İstek listesi'], ['konser', 'Konserler']], ui.raf, 'sm')}<div id="rbody"></div></div>`;
+  bindSeg('rseg', k => { ui.raf = k; render(); });
+  const el = $('#rbody');
+  if (ui.raf === 'konser') return renderConcerts(el);
+  const status = ui.raf === 'koleksiyon' ? 'owned' : 'wish';
+  const items = S.collection.filter(c => c.status === status).sort((a, b) => b.addedAt - a.addedAt);
+  const fmtCount = {}; items.forEach(c => fmtCount[c.format] = (fmtCount[c.format] || 0) + 1);
+  el.innerHTML = `
+    <div class="card" style="padding:16px;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:34px">${status === 'owned' ? '📦' : '💭'}</div>
+        <div style="flex:1"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:22px">${items.length} ${status === 'owned' ? 'parça' : 'albüm'}</div>
+        <div class="muted" style="font-size:12px">${status === 'owned' ? (Object.entries(fmtCount).map(([k, v]) => `${v} ${k}`).join(' · ') || 'Plak, CD ve kasetlerin') : 'Almak istediklerin'}</div></div>
+        <button class="btn sm red" id="cAdd">+ Ekle</button>
+      </div>
+    </div>
+    ${items.length ? `<div class="coll" style="margin-top:12px">${items.map(c => `<div class="g" data-c="${c.id}">${coverHtml(c.album, '100%', 200)}<span class="fmt">${esc(c.format.toUpperCase())}</span></div>`).join('')}</div>`
+      : `<div class="empty"><div class="big">${status === 'owned' ? '💿' : '🛒'}</div>${status === 'owned' ? 'Rafındaki plak ve CD\'leri ekle.' : 'Almak istediğin albümleri buraya ekle.'}</div>`}`;
+  $('#cAdd').onclick = () => { ui.rafAdd = status; openSearch('collection'); };
+  $$('[data-c]', el).forEach(g => g.onclick = () => openCollectionItem(g.dataset.c));
+}
+async function addToCollection(album) {
+  const ex = S.collection.find(c => albumKey(c.album) === albumKey(album));
+  const v = await formDialog({
+    title: ex ? 'Zaten rafında' : 'Rafa ekle', text: `${album.artist} — ${album.title}`, ok: ex ? 'Güncelle' : 'Ekle',
+    fields: [{ name: 'format', label: 'Format', type: 'chips', options: FORMATS, value: ex ? ex.format : 'Plak' },
+      { name: 'status', label: 'Durum', type: 'chips', options: [['owned', '📦 Sahibim'], ['wish', '💭 İstiyorum']], value: ex ? ex.status : (ui.rafAdd || 'owned') }]
+  });
+  if (!v) return;
+  if (ex) { ex.format = v.format; ex.status = v.status; }
+  else S.collection.push({ id: uid(), album, format: v.format || 'Plak', status: v.status || 'owned', addedAt: Date.now() });
+  save(); ui.raf = v.status === 'wish' ? 'istek' : 'koleksiyon'; if (view === 'raf') render(); toast('Rafa eklendi'); checkBadges();
+}
+function openCollectionItem(id) {
+  const c = S.collection.find(x => x.id === id); if (!c) return;
+  const a = c.album, ls = logsForAlbum(a);
+  openSheet(c.status === 'owned' ? 'Koleksiyon' : 'İstek listesi', `
+    <div style="display:flex;justify-content:center">${coverHtml(a, 'min(60vw,240px)', 600)}</div>
+    <div style="text-align:center;margin-top:14px"><div lang="en" style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:22px;text-transform:uppercase">${esc(a.title)}</div>
+    <div style="color:var(--red2);font-weight:700">${esc(a.artist)}</div><div class="muted" style="font-size:13px">${[a.year, a.genre].filter(Boolean).map(esc).join(' · ')}</div></div>
+    <label class="lbl">Format</label><div class="chips" id="cf">${FORMATS.map(([k, l]) => `<button class="chip ${c.format === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
+    ${ls.length ? `<div class="h-sec">Dinleyişlerin</div>${ls.map(logRow).join('')}` : ''}
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn block red" id="cListen">🎧 Şimdi dinle</button>
+      <button class="btn block" id="cMove">${c.status === 'owned' ? 'İstek listesine' : '📦 Aldım!'}</button>
+    </div>
+    <button class="btn block ghost" id="cDel" style="margin-top:10px;color:var(--red2)">Raftan kaldır</button>`, (sh, close) => {
+    bindCommon(sh);
+    $('#cf', sh).onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; c.format = b.dataset.f; $$('[data-f]', sh).forEach(x => x.classList.toggle('on', x === b)); save(); render(); };
+    $('#cListen', sh).onclick = e => {
+      if (a.source === 'manual') { close(); openManualTracks(a); return; }
+      startFromAlbum(a, e.currentTarget);
+    };
+    $('#cMove', sh).onclick = () => { c.status = c.status === 'owned' ? 'wish' : 'owned'; if (c.status === 'owned') c.addedAt = Date.now(); save(); close(); ui.raf = c.status === 'owned' ? 'koleksiyon' : 'istek'; render(); toast(c.status === 'owned' ? 'Koleksiyona eklendi 📦' : 'İstek listesine taşındı'); checkBadges(); };
+    $('#cDel', sh).onclick = async () => { if (!(await dialog({ title: 'Raftan kaldır?', text: `${a.title} kaldırılacak.`, ok: 'Kaldır' }))) return; S.collection = S.collection.filter(x => x.id !== c.id); save(); close(); render(); };
+  }, { full: true });
+}
+
+/* ---------- concerts ---------- */
+function renderConcerts(el) {
+  const C = [...S.concerts].sort((a, b) => b.date.localeCompare(a.date));
+  const bands = new Set(C.flatMap(c => [c.artist, ...(c.others || [])].map(normA))).size;
+  el.innerHTML = `
+    <div class="card" style="padding:16px;margin-top:10px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:34px">🎤</div>
+      <div style="flex:1"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:22px">${C.length} konser</div>
+      <div class="muted" style="font-size:12px">${C.length ? `${bands} farklı grup · ${new Set(C.map(c => (c.city || '').toLowerCase()).filter(Boolean)).size} şehir` : 'Gittiğin konserleri kaydet'}</div></div>
+      <button class="btn sm red" id="gAdd">+ Ekle</button>
+    </div>
+    <div style="margin-top:12px">${C.length ? C.map(c => {
+      const d = parseYmd(c.date);
+      return `<div class="card concert" data-g="${c.id}"><div class="dt"><div class="d">${d.getDate()}</div><div class="m">${d.toLocaleDateString('tr-TR', { month: 'short' })}</div><div class="y">${d.getFullYear()}</div></div>
+        <div class="t"><div class="a">${esc(c.artist)}</div><div class="b">${esc([c.venue, c.city].filter(Boolean).join(' · '))}</div><div class="b">${(c.others || []).length ? '+ ' + esc(c.others.join(', ')) : (c.setlist || []).length ? c.setlist.length + ' şarkılık setlist' : ''}</div></div>
+        ${c.photo ? `<img class="ph" src="${c.photo}" alt="">` : ''}${c.score != null ? badge(c.score) : ''}</div>`;
+    }).join('') : '<div class="empty"><div class="big">🏟️</div>Henüz konser yok.</div>'}</div>`;
+  $('#gAdd').onclick = () => openConcertForm();
+  $$('[data-g]', el).forEach(c => c.onclick = () => openConcert(c.dataset.g));
+}
+function openConcertForm(existing) {
+  const c = existing || { date: today(), artist: '', others: [], venue: '', city: '', score: 8, setlist: [], note: '', photo: null };
+  openSheet(existing ? 'Konseri düzenle' : 'Konser ekle', `
+    <label class="lbl">Tarih</label><input class="field" type="date" id="gD" value="${esc(c.date)}">
+    <label class="lbl">Grup (headliner)</label><input class="field" id="gA" value="${esc(c.artist)}" placeholder="ör. Gojira">
+    <label class="lbl">Diğer gruplar (virgülle)</label><input class="field" id="gO" value="${esc((c.others || []).join(', '))}" placeholder="ör. Mastodon, Lorna Shore">
+    <div style="display:flex;gap:10px"><div style="flex:1.3"><label class="lbl">Mekan</label><input class="field" id="gV" value="${esc(c.venue)}" placeholder="ör. AFAS Live"></div>
+    <div style="flex:1"><label class="lbl">Şehir</label><input class="field" id="gC" value="${esc(c.city)}" placeholder="Amsterdam"></div></div>
+    <label class="lbl">Puan · <b id="gSv" style="color:${scoreColor(c.score)}">${fmtScore(c.score)}</b></label>
+    <input type="range" min="1" max="10" step="0.5" id="gS" value="${c.score ?? 8}" style="margin-top:0">
+    <label class="lbl">Setlist — her satıra bir şarkı (isteğe bağlı)</label><textarea class="field" id="gL" rows="6" placeholder="Born for One Thing&#10;Backbone&#10;…">${esc((c.setlist || []).join('\n'))}</textarea>
+    <label class="lbl">Not</label><textarea class="field" id="gN" rows="3" placeholder="Pit, ses, en iyi an…">${esc(c.note || '')}</textarea>
+    <label class="lbl">Fotoğraf (isteğe bağlı)</label><input class="field" type="file" id="gP" accept="image/*">
+    ${c.photo ? `<img src="${c.photo}" id="gPv" style="width:100%;border-radius:12px;margin-top:10px">` : ''}
+    <button class="btn red block" id="gGo" style="margin-top:18px">${existing ? 'Kaydet' : 'Konseri ekle'}</button>`, (sh, close) => {
+    let photo = c.photo;
+    $('#gS', sh).oninput = e => { const v = +e.target.value; $('#gSv', sh).textContent = fmtScore(v); $('#gSv', sh).style.color = scoreColor(v); };
+    $('#gP', sh).onchange = async e => { const f = e.target.files[0]; if (f) { photo = await shrinkImage(f, 720, .72); toast('Fotoğraf eklendi'); } };
+    $('#gGo', sh).onclick = () => {
+      const artist = $('#gA', sh).value.trim(); if (!artist) { toast('Grup adı gerekli'); return; }
+      const o = {
+        id: c.id || uid(), date: $('#gD', sh).value || today(), artist,
+        others: $('#gO', sh).value.split(',').map(s => s.trim()).filter(Boolean),
+        venue: $('#gV', sh).value.trim(), city: $('#gC', sh).value.trim(), score: +$('#gS', sh).value,
+        setlist: $('#gL', sh).value.split('\n').map(s => s.trim()).filter(Boolean), note: $('#gN', sh).value.trim(), photo, createdAt: c.createdAt || Date.now()
+      };
+      S.concerts = S.concerts.filter(x => x.id !== o.id).concat(o); save(); close(); ui.raf = 'konser'; render(); toast(existing ? 'Güncellendi ✓' : 'Konser eklendi 🤘'); checkBadges(); resolveCountries();
+    };
+  }, { full: true });
+}
+function openConcert(id) {
+  const c = S.concerts.find(x => x.id === id); if (!c) return;
+  openSheet(fmtDate(c.date), `
+    ${c.photo ? `<img src="${c.photo}" style="width:100%;border-radius:16px;margin-bottom:14px">` : ''}
+    <div lang="en" style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:28px;text-transform:uppercase;line-height:1.05">${esc(c.artist)}</div>
+    ${(c.others || []).length ? `<div class="muted" style="margin-top:4px">+ ${esc(c.others.join(', '))}</div>` : ''}
+    <div style="margin-top:8px;font-weight:600">${esc([c.venue, c.city].filter(Boolean).join(' · '))}</div>
+    <div style="display:flex;gap:10px;margin-top:14px"><div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:34px;font-weight:700;color:${scoreColor(c.score)}">${fmtScore(c.score)}</div><div class="muted" style="font-size:12px">Konser puanı</div></div>
+    <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:34px;font-weight:700">${(c.setlist || []).length || '–'}</div><div class="muted" style="font-size:12px">Şarkı</div></div></div>
+    ${c.note ? `<div class="card" style="padding:14px;margin-top:14px;font-style:italic;color:#ddd">“${esc(c.note)}”</div>` : ''}
+    ${(c.setlist || []).length ? `<div class="h-sec">Setlist</div><div class="card" style="padding:4px 14px">${c.setlist.map((s, i) => `<div class="kv"><span>${pad(i + 1)}</span><span style="flex:1;text-align:left;margin-left:12px">${esc(s)}</span></div>`).join('')}</div>` : ''}
+    <a class="chip" style="margin-top:14px;text-decoration:none" href="https://www.setlist.fm/search?query=${enc(c.artist + ' ' + (c.city || ''))}" target="_blank" rel="noopener">setlist.fm'de ara ↗</a>
+    <div style="display:flex;gap:10px;margin-top:18px"><button class="btn block" id="gE">Düzenle</button><button class="btn" id="gX" style="color:var(--red2)">Sil</button></div>`, (sh, close) => {
+    $('#gE', sh).onclick = () => { close(); setTimeout(() => openConcertForm(c), 320); };
+    $('#gX', sh).onclick = async () => { if (!(await dialog({ title: 'Konseri sil?', text: `${c.artist} — ${fmtDateShort(c.date)}`, ok: 'Sil' }))) return; S.concerts = S.concerts.filter(x => x.id !== c.id); save(); close(); render(); };
+  }, { full: true });
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+function latestPerAlbum(arr, keyFn = x => albumKey(x.l.album)) {
+  const m = new Map();
+  for (const x of arr) { const k = keyFn(x), p = m.get(k); if (!p || x.l.date > p.l.date || (x.l.date === p.l.date && x.l.createdAt > p.l.createdAt)) m.set(k, x); }
+  return [...m.values()];
+}
+function statsFor(logs) {
+  const scored = logs.map(l => ({ l, s: finalScore(l) })).filter(x => x.s != null);
+  const avg = scored.length ? scored.reduce((a, x) => a + x.s, 0) / scored.length : null;
+  const allTracks = logs.flatMap(l => l.tracks.filter(t => !t.skip && t.score != null).map(t => ({ ...t, l })));
+  const ms = logs.reduce((a, l) => a + totalMs(l.tracks), 0);
+  const artists = {};
+  for (const x of scored) { const k = normA(x.l.album.artist); (artists[k] = artists[k] || { k: x.l.album.artist, n: 0, sum: 0, l: x.l }); artists[k].n++; artists[k].sum += x.s; }
+  const artArr = Object.values(artists).map(v => ({ ...v, avg: v.sum / v.n }));
+  const tagC = {};
+  for (const l of logs) { const tg = (l.tags && l.tags.length) ? l.tags : [l.album.genre || 'Diğer']; tg.forEach(t => tagC[t] = (tagC[t] || 0) + 1); }
+  const ctry = {};
+  for (const l of logs) { const c = countryOf(l.album.artist); if (c) ctry[c] = (ctry[c] || 0) + 1; }
+  return {
+    logs, scored, avg, allTracks, ms, artArr,
+    topAlbums: latestPerAlbum(scored).sort((a, b) => b.s - a.s || b.l.createdAt - a.l.createdAt),
+    topTracks: latestPerAlbum(allTracks, t => albumKey(t.l.album) + '#' + normT(t.title)).sort((a, b) => b.score - a.score || (b.fav - a.fav)),
+    topArtists: [...artArr].sort((a, b) => b.n - a.n || b.avg - a.avg),
+    tags: Object.entries(tagC).sort((a, b) => b[1] - a[1]),
+    countries: ctry,
+    tens: allTracks.filter(t => t.score === 10).length,
+    moments: logs.flatMap(l => l.tracks.flatMap(t => (t.moments || []).map(m => ({ ...m, track: t.title, l })))),
+    best: bestRun(logs.map(l => l.date))
+  };
+}
+function renderStats(app) {
+  const L = S.logs;
+  if (!L.length) { app.innerHTML = `<div class="view"><div class="empty"><div class="big">📊</div>İstatistikler ilk seanslarından sonra burada belirecek.</div></div>`; return; }
+  const yrs = [...new Set(L.map(l => l.date.slice(0, 4)))].sort().reverse();
+  if (ui.statYear !== 'all' && !yrs.includes(ui.statYear)) ui.statYear = 'all';
+  const logs = ui.statYear === 'all' ? L : L.filter(l => l.date.startsWith(ui.statYear));
+  const X = statsFor(logs);
+  const st = streaks();
+  const tagArr = X.tags.slice(0, 8), tagMax = tagArr.length ? tagArr[0][1] : 1;
+  const dec = {}; for (const l of logs) if (l.album.year) { const d = Math.floor(l.album.year / 10) * 10; dec[d] = (dec[d] || 0) + 1; }
+  const decArr = Object.entries(dec).sort((a, b) => a[0] - b[0]); const decMax = Math.max(1, ...decArr.map(x => x[1]));
+  const hist = Array(10).fill(0); X.allTracks.forEach(t => hist[t.score - 1]++); const hMax = Math.max(1, ...hist);
+  const med = {}; logs.forEach(l => { if (!l.medium) return; const s = finalScore(l); if (s == null) return; (med[l.medium] = med[l.medium] || { n: 0, sum: 0 }); med[l.medium].n++; med[l.medium].sum += s; });
+  const medArr = Object.entries(med).map(([k, v]) => [k, v.sum / v.n, v.n]).sort((a, b) => b[1] - a[1]);
+  const changes = []; const byKey = {};
+  [...L].sort((a, b) => a.date.localeCompare(b.date)).forEach(l => (byKey[albumKey(l.album)] = byKey[albumKey(l.album)] || []).push(l));
+  Object.values(byKey).filter(v => v.length > 1).forEach(v => { const a = finalScore(v[0]), b = finalScore(v[v.length - 1]); if (a != null && b != null) changes.push({ l: v[v.length - 1], from: a, to: b, d: b - a, n: v.length }); });
+  changes.sort((a, b) => Math.abs(b.d) - Math.abs(a.d));
+  const ctryArr = Object.entries(X.countries).sort((a, b) => b[1] - a[1]);
+  const unknownC = new Set(logs.map(l => normA(l.album.artist)).filter(k => S.meta.countries[k] === undefined)).size;
+
+  const by = logsByDate();
+  const end = new Date(); const start = new Date(); start.setDate(end.getDate() - 7 * 26 + 1); start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+  let heat = '';
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const k = ymd(d); const ls = by[k];
+    const s = ls ? Math.max(...ls.map(l => finalScore(l) || 5)) : null;
+    heat += `<i title="${k}" style="${ls ? `background:${scoreColor(s)}` : ''}"></i>`;
+  }
+  const wrapYear = ui.statYear !== 'all' ? ui.statYear : yrs[0];
+
+  app.innerHTML = `<div class="view">
+    ${yrs.length > 1 || yrs[0] !== String(new Date().getFullYear()) ? `<div class="chips" id="yrs" style="margin-bottom:12px"><button class="chip ${ui.statYear === 'all' ? 'on' : ''}" data-y="all">Tümü</button>${yrs.map(y => `<button class="chip ${ui.statYear === y ? 'on' : ''}" data-y="${y}">${y}</button>`).join('')}</div>` : ''}
+    <button class="card" id="wrapBtn" style="width:100%;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;text-align:left;background:radial-gradient(120% 100% at 100% 0%,rgba(227,38,45,.4),transparent 60%),var(--card)">
+      <div style="font-size:34px">🎁</div><div style="flex:1"><div style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:22px;text-transform:uppercase">${wrapYear} özetin</div><div class="muted" style="font-size:12px">Wrapped tarzı yıl özeti + story görseli</div></div><span style="font-size:22px">›</span>
+    </button>
+    <div class="kpis">
+      <div class="card kpi"><div class="n">${logs.length}</div><div class="l">Albüm dinlendi</div></div>
+      <div class="card kpi"><div class="n" style="color:${scoreColor(X.avg)}">${fmtScore(X.avg)}</div><div class="l">Ortalama albüm puanı</div></div>
+      <div class="card kpi"><div class="n">${X.allTracks.length}</div><div class="l">Puanlanan şarkı · ${X.tens} tane 10</div></div>
+      <div class="card kpi"><div class="n">${X.ms ? Math.round(X.ms / 36e5) : 0}<span style="font-size:16px"> sa</span></div><div class="l">Toplam dinleme</div></div>
+      <div class="card kpi"><div class="n">${st.cur} 🔥</div><div class="l">Şu anki seri · en uzun ${st.best}</div></div>
+      <div class="card kpi"><div class="n">${X.artArr.length}</div><div class="l">Farklı grup · ${ctryArr.length} ülke</div></div>
+      <div class="card kpi"><div class="n">${X.moments.length}</div><div class="l">Riff anı</div></div>
+      <div class="card kpi"><div class="n">${S.concerts.length}</div><div class="l">Konser · ${S.collection.filter(c => c.status === 'owned').length} parça koleksiyon</div></div>
+    </div>
+
+    <div class="h-sec">Son 6 ay</div>
+    <div class="card" style="padding:12px;overflow-x:auto"><div class="heat">${heat}</div></div>
+
+    <div class="h-sec">Grupların haritası 🌍</div>
+    <div class="card" style="padding:12px" id="countrySec">
+      <div class="map" id="map"></div>
+      ${ctryArr.length ? `<div class="bars flags" style="margin-top:6px">${ctryArr.slice(0, 8).map(([c, n]) => `<div class="br"><span class="k">${flag(c)} ${esc(trName(c))}</span><span class="v"><i style="width:${n / ctryArr[0][1] * 100}%"></i></span><span class="x">${n}</span></div>`).join('')}</div>` : ''}
+      ${unknownC ? `<div class="muted" style="font-size:12px;margin-top:8px;text-align:center">${unknownC} grubun ülkesi MusicBrainz'den getiriliyor…</div>` : ''}
+    </div>
+
+    <div class="h-sec">En iyi albümler</div>
+    <div class="card" style="padding:4px 10px">${X.topAlbums.slice(0, 5).map((x, i) => `<div class="rank" data-open="${x.l.id}"><span class="p">${i + 1}</span>${coverHtml(x.l.album, '44px', 120)}<div class="t"><div class="a">${esc(x.l.album.title)}</div><div class="b">${esc(x.l.album.artist)}</div></div>${badge(x.s)}</div>`).join('')}</div>
+
+    ${X.topTracks.length ? `<div class="h-sec">En iyi şarkılar</div>
+    <div class="card" style="padding:4px 10px">${X.topTracks.slice(0, 10).map((t, i) => `<div class="rank" data-open="${t.l.id}"><span class="p">${i + 1}</span><div class="t"><div class="a">${t.fav ? '⭐ ' : ''}${esc(t.title)}</div><div class="b">${esc(t.l.album.artist)} · ${esc(t.l.album.title)}</div></div>${badge(t.score)}</div>`).join('')}</div>` : ''}
+
+    ${X.moments.length ? `<div class="h-sec">Son riff anların 🔥</div>
+    <div class="card" style="padding:4px 10px">${X.moments.slice(-8).reverse().map(m => `<div class="rank" data-open="${m.l.id}"><span class="p">🔥</span><div class="t"><div class="a">${esc(m.track)}${m.t != null ? ' @ ' + fmtSec(m.t) : ''}</div><div class="b">${esc(m.note || m.l.album.artist + ' · ' + m.l.album.title)}</div></div></div>`).join('')}</div>` : ''}
+
+    <div class="h-sec">En çok dinlenen gruplar</div>
+    <div class="card" style="padding:4px 10px">${X.topArtists.slice(0, 6).map((x, i) => `<div class="rank"><span class="p">${i + 1}</span>${coverHtml(x.l.album, '44px', 120)}<div class="t"><div class="a">${countryOf(x.k) ? flag(countryOf(x.k)) + ' ' : ''}${esc(x.k)}</div><div class="b">${x.n} albüm · ort. ${fmtScore(x.avg)}</div></div></div>`).join('')}</div>
+
+    ${changes.length ? `<div class="h-sec">Fikrin değişenler 🔁</div>
+    <div class="card" style="padding:4px 10px">${changes.slice(0, 6).map(c => `<div class="rank" data-open="${c.l.id}">${coverHtml(c.l.album, '40px', 120)}<div class="t"><div class="a">${esc(c.l.album.title)}</div><div class="b">${c.n} dinleyiş · ${fmtScore(c.from)} → ${fmtScore(c.to)}</div></div><span style="font-weight:800;color:${c.d > 0 ? '#4ade80' : c.d < 0 ? '#f87171' : 'var(--mute)'}">${c.d > 0 ? '▲' : c.d < 0 ? '▼' : '='} ${fmtScore(Math.abs(c.d))}</span></div>`).join('')}</div>` : ''}
+
+    ${X.allTracks.length ? `<div class="h-sec">Puan dağılımın</div>
+    <div class="card" style="padding:12px 12px 10px"><div class="hist">${hist.map((n, i) => `<div class="col"><span style="color:var(--mute)">${n || ''}</span><i style="height:${n / hMax * 70}%;background:${scoreColor(i + 1)}"></i><span>${i + 1}</span></div>`).join('')}</div></div>` : ''}
+
+    <div class="h-sec">Türler</div>
+    <div class="card bars" style="padding:6px 14px">${tagArr.map(([k, n]) => `<div class="br"><span class="k">${esc(k)}</span><span class="v"><i style="width:${n / tagMax * 100}%"></i></span><span class="x">${n}</span></div>`).join('')}</div>
+
+    ${medArr.length ? `<div class="h-sec">Ortama göre ortalama puan</div>
+    <div class="card bars" style="padding:6px 14px">${medArr.map(([k, a, n]) => `<div class="br"><span class="k">${esc((MEDIUMS.find(m => m[0] === k) || [, k])[1])}</span><span class="v"><i style="width:${a * 10}%"></i></span><span class="x">${fmtScore(a)} · ${n}</span></div>`).join('')}</div>` : ''}
+
+    ${decArr.length ? `<div class="h-sec">Albümlerin çıkış dönemi</div>
+    <div class="card bars" style="padding:6px 14px">${decArr.map(([k, n]) => `<div class="br"><span class="k">${k}'ler</span><span class="v"><i style="width:${n / decMax * 100}%"></i></span><span class="x">${n}</span></div>`).join('')}</div>` : ''}
+  </div>`;
+  if ($('#yrs')) $('#yrs').onclick = e => { const b = e.target.closest('[data-y]'); if (b) { ui.statYear = b.dataset.y; render(); } };
+  $('#wrapBtn').onclick = () => openWrapped(wrapYear);
+  bindCommon(app);
+  drawMap($('#map'), X.countries);
+  resolveCountries();
+}
+
+/* ---------- countries (MusicBrainz) + map ---------- */
+let ccRunning = false;
+function refreshStatsSoft() { if (view === 'istatistik' && !sheetStack.length) { const y = window.scrollY; render(); window.scrollTo(0, y); } }
+async function resolveCountries() {
+  if (ccRunning) return; ccRunning = true; let fetched = 0;
+  try {
+    const names = new Map();
+    S.logs.forEach(l => names.set(normA(l.album.artist), l.album.artist));
+    S.concerts.forEach(c => names.set(normA(c.artist), c.artist));
+    for (const [k, name] of names) {
+      const e = S.meta.countries[k];
+      if (e && (e.c || e.manual || Date.now() - e.t < 7 * 864e5)) continue;
+      try { const c = await API.mbCountry(name); S.meta.countries[k] = { c, t: Date.now() }; }
+      catch (err) { S.meta.countries[k] = { c: null, t: Date.now() - 6 * 864e5 }; }
+      save(); fetched++;
+      if (fetched % 6 === 0) refreshStatsSoft();
+      await sleep(1150);
+    }
+    if (fetched) { refreshStatsSoft(); checkBadges(); }
+  } finally { ccRunning = false; }
+}
+let worldP = null, worldReady = false;
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+function getWorld() {
+  if (worldP) return worldP;
+  worldP = (async () => {
+    if (!window.d3) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js');
+    if (!window.topojson) await loadScript('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js');
+    const w = await (await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')).json();
+    const fc = topojson.feature(w, w.objects.countries);
+    fc.features = fc.features.filter(f => f.properties.name !== 'Antarctica');
+    worldReady = true;
+    return fc;
+  })();
+  worldP.catch(() => { worldP = null; });
+  return worldP;
+}
+function mixRed(t) {
+  const a = [74, 22, 26], b = [255, 59, 59];
+  return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',')})`;
+}
+async function drawMap(el, counts) {
+  if (!el) return;
+  if (!worldReady) el.innerHTML = '<div style="height:170px;display:grid;place-items:center" class="muted">Harita yükleniyor…</div>';
+  try {
+    const geo = await getWorld();
+    if (!el.isConnected) return;
+    const W = 600, H = 300;
+    const proj = d3.geoNaturalEarth1().fitSize([W, H], geo);
+    const path = d3.geoPath(proj);
+    const byName = {}; for (const [c, n] of Object.entries(counts)) byName[enName(c)] = n;
+    const max = Math.max(1, ...Object.values(counts));
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${geo.features.map(f => {
+      const n = byName[f.properties.name];
+      return `<path d="${path(f)}" fill="${n ? mixRed(.25 + .75 * n / max) : '#202027'}" stroke="#0a0a0c" stroke-width=".6"><title>${esc(f.properties.name)}${n ? ': ' + n : ''}</title></path>`;
+    }).join('')}</svg>`;
+  } catch (e) { if (el.isConnected) el.innerHTML = ''; }
+}
+
+/* =========================================================
+   WRAPPED + STORY IMAGES
+   ========================================================= */
+function openWrapped(year) {
+  const logs = S.logs.filter(l => l.date.startsWith(year));
+  if (!logs.length) { toast(`${year} için kayıt yok`); return; }
+  const X = statsFor(logs);
+  const topA = X.topAlbums[0], topT = X.topTracks[0], topAr = X.topArtists[0], topTag = X.tags[0], topC = Object.entries(X.countries).sort((a, b) => b[1] - a[1])[0];
+  const months = {}; logs.forEach(l => { const m = +l.date.slice(5, 7); months[m] = (months[m] || 0) + 1; });
+  const topM = Object.entries(months).sort((a, b) => b[1] - a[1])[0];
+  const mName = m => new Date(2000, m - 1, 1).toLocaleDateString('tr-TR', { month: 'long' });
+  const gigs = S.concerts.filter(c => c.date.startsWith(year));
+  openSheet(`${year} özetin`, `
+    <div class="wr card" style="background:radial-gradient(120% 100% at 100% 0%,rgba(227,38,45,.45),transparent 60%),var(--card)">
+      <div class="logo" style="font-size:34px">Rit<b>ü</b>el</div>
+      <div class="n" style="font-size:72px;color:var(--red2);margin-top:6px">${year}</div>
+      <div class="l" style="font-size:15px;color:var(--text)">Bu yıl ${logs.length} albüm, ${X.allTracks.length} şarkı dinledin.</div>
+    </div>
+    <div class="wr2">
+      <div class="card wr"><div class="n">${X.ms ? Math.round(X.ms / 36e5) : 0}</div><div class="l">saat metal</div></div>
+      <div class="card wr"><div class="n" style="color:${scoreColor(X.avg)}">${fmtScore(X.avg)}</div><div class="l">ortalama puanın</div></div>
+      <div class="card wr"><div class="n">${X.best}</div><div class="l">gün en uzun seri</div></div>
+      <div class="card wr"><div class="n">${X.tens}</div><div class="l">tane 10 puan</div></div>
+    </div>
+    ${topA ? `<div class="h-sec">Yılın albümü 👑</div><div class="card" style="padding:14px;display:flex;gap:14px;align-items:center" data-open="${topA.l.id}">${coverHtml(topA.l.album, '96px', 600)}<div style="flex:1;min-width:0"><div style="font-weight:800;font-size:17px">${esc(topA.l.album.title)}</div><div class="muted">${esc(topA.l.album.artist)}</div></div>${badge(topA.s)}</div>` : ''}
+    <div class="card" style="padding:4px 14px;margin-top:12px">
+      ${topAr ? `<div class="kv"><span>Yılın grubu</span><span><b>${esc(topAr.k)}</b> · ${topAr.n} albüm</span></div>` : ''}
+      ${topT ? `<div class="kv"><span>Yılın şarkısı</span><span style="text-align:right"><b>${esc(topT.title)}</b> · ${fmtScore(topT.score)}</span></div>` : ''}
+      ${topTag ? `<div class="kv"><span>En çok dinlenen tür</span><span><b>${esc(topTag[0])}</b></span></div>` : ''}
+      ${topC ? `<div class="kv"><span>Favori ülke</span><span><b>${flag(topC[0])} ${esc(trName(topC[0]))}</b></span></div>` : ''}
+      ${topM ? `<div class="kv"><span>En yoğun ay</span><span><b>${esc(mName(+topM[0]))}</b> · ${topM[1]} albüm</span></div>` : ''}
+      <div class="kv"><span>Riff anı</span><span><b>${X.moments.length}</b></span></div>
+      ${gigs.length ? `<div class="kv"><span>Konser</span><span><b>${gigs.length}</b></span></div>` : ''}
+    </div>
+    <div class="h-sec">İlk 5</div>
+    <div class="card" style="padding:4px 10px">${X.topAlbums.slice(0, 5).map((x, i) => `<div class="rank" data-open="${x.l.id}"><span class="p">${i + 1}</span>${coverHtml(x.l.album, '44px', 120)}<div class="t"><div class="a">${esc(x.l.album.title)}</div><div class="b">${esc(x.l.album.artist)}</div></div>${badge(x.s)}</div>`).join('')}</div>
+    <button class="btn red block" id="wStory" style="margin-top:16px">📸 Story görseli oluştur</button>
+  `, sh => {
+    bindCommon(sh);
+    $('#wStory', sh).onclick = () => showStory(`${year} özetin`, (x, img) => drawWrapStory(x, img, year, X, { topAr, topT, topTag, topC }), `ritual-${year}-ozet.png`);
+  }, { full: true });
+}
+
+function loadImg(src) {
+  if (!src) return Promise.resolve(null);
+  return new Promise(res => {
+    const im = new Image(); im.crossOrigin = 'anonymous';
+    const t = setTimeout(() => res(null), 9000);
+    im.onload = () => { clearTimeout(t); res(im); }; im.onerror = () => { clearTimeout(t); res(null); };
+    im.src = src;
+  });
+}
+async function makeStory(draw) {
+  try { await Promise.all(['700 80px Oswald', '80px UnifrakturMaguntia', '800 40px Inter', '600 40px Inter', '400 40px Inter'].map(f => document.fonts.load(f))); } catch (e) {}
+  const attempt = async withImg => {
+    const c = document.createElement('canvas'); c.width = 1080; c.height = 1920;
+    await draw(c.getContext('2d'), withImg);
+    return new Promise((res, rej) => { try { c.toBlob(b => b ? res(b) : rej(new Error('blob')), 'image/png'); } catch (e) { rej(e); } });
+  };
+  try { return await attempt(true); }
+  catch (e) { return await attempt(false); }
+}
+async function showStory(title, draw, filename) {
+  const close = openSheet('Story görseli', `<div class="spinner"></div><div class="empty" style="padding-top:0">Görsel hazırlanıyor…</div>`, null, { full: true });
+  const sh = $$('.sheet').pop(); const body = $('.sb', sh);
+  try {
+    const blob = await makeStory(draw);
+    const url = URL.createObjectURL(blob);
+    const file = new File([blob], filename, { type: 'image/png' });
+    body.innerHTML = `<img class="story-prev" src="${url}" alt="">
+      <div style="display:flex;gap:10px;margin-top:14px"><button class="btn red block" id="sShare">Paylaş</button><button class="btn block" id="sDl">İndir</button></div>
+      <div class="muted" style="font-size:12px;text-align:center;margin-top:10px">Instagram story için 1080×1920. Görsele basılı tutarak da kaydedebilirsin.</div>`;
+    $('#sShare', body).onclick = async () => {
+      try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title }); return; } } catch (e) { if (e.name === 'AbortError') return; }
+      download(url, filename);
+    };
+    $('#sDl', body).onclick = () => download(url, filename);
+  } catch (e) { body.innerHTML = '<div class="empty">Görsel oluşturulamadı.</div>'; }
+}
+function download(url, name) { const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+
+/* canvas helpers */
+const F = { osw: s => `700 ${s}px Oswald, 'Arial Narrow', Impact, sans-serif`, int: (s, w = 600) => `${w} ${s}px Inter, system-ui, sans-serif`, goth: s => `${s}px UnifrakturMaguntia, serif` };
+function fit(x, text, maxW) {
+  text = String(text || ''); if (x.measureText(text).width <= maxW) return text;
+  while (text.length > 1 && x.measureText(text + '…').width > maxW) text = text.slice(0, -1);
+  return text + '…';
+}
+function txt(x, text, X, Y, font, color, align = 'left', maxW = 960) { x.font = font; x.fillStyle = color; x.textAlign = align; x.textBaseline = 'alphabetic'; x.fillText(fit(x, text, maxW), X, Y); }
+function shrinkFont(x, text, maxW, size, min, mk) { let s = size; x.font = mk(s); while (s > min && x.measureText(text).width > maxW) { s -= 2; x.font = mk(s); } return s; }
+function rr(x, X, Y, W, H, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); }
+function coverDraw(x, img, X, Y, S2, r) {
+  x.save(); rr(x, X, Y, S2, S2, r); x.clip();
+  if (img) { const s = Math.max(S2 / img.width, S2 / img.height); const w = img.width * s, h = img.height * s; x.drawImage(img, X + (S2 - w) / 2, Y + (S2 - h) / 2, w, h); }
+  else { x.fillStyle = '#1c1c21'; x.fillRect(X, Y, S2, S2); x.strokeStyle = '#33333b'; x.lineWidth = S2 * .02; x.beginPath(); x.arc(X + S2 / 2, Y + S2 / 2, S2 * .32, 0, 7); x.stroke(); x.beginPath(); x.arc(X + S2 / 2, Y + S2 / 2, S2 * .08, 0, 7); x.stroke(); }
+  x.restore();
+}
+function canvasBadge(x, s, X, Y, H = 64, align = 'right') {
+  const t = fmtScore(s); x.font = F.osw(H * .62); const w = Math.max(H * 1.35, x.measureText(t).width + H * .55);
+  const L = align === 'right' ? X - w : X;
+  x.fillStyle = s == null ? '#2a2a30' : scoreColor(s); rr(x, L, Y, w, H, H * .24); x.fill();
+  x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, L + w / 2, Y + H / 2 + 2); x.textBaseline = 'alphabetic';
+  return w;
+}
+function storyBg(x) {
+  x.fillStyle = '#0a0a0c'; x.fillRect(0, 0, 1080, 1920);
+  let g = x.createRadialGradient(960, 160, 0, 960, 160, 1000); g.addColorStop(0, 'rgba(227,38,45,.5)'); g.addColorStop(1, 'rgba(227,38,45,0)'); x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
+  g = x.createRadialGradient(80, 1850, 0, 80, 1850, 800); g.addColorStop(0, 'rgba(255,106,43,.18)'); g.addColorStop(1, 'rgba(255,106,43,0)'); x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
+}
+function storyLogo(x, Y) {
+  x.font = F.goth(76); x.textAlign = 'center'; x.fillStyle = '#f3f3f5';
+  const a = 'Rit', b = 'ü', c = 'el'; const wa = x.measureText(a).width, wb = x.measureText(b).width, wc = x.measureText(c).width; let X = 540 - (wa + wb + wc) / 2;
+  x.textAlign = 'left'; x.fillText(a, X, Y); x.fillStyle = '#e3262d'; x.fillText(b, X + wa, Y); x.fillStyle = '#f3f3f5'; x.fillText(c, X + wa + wb, Y);
+}
+async function drawAlbumStory(x, withImg, l) {
+  const a = l.album, s = finalScore(l);
+  const img = withImg ? await loadImg(a.cover) : null;
+  storyBg(x);
+  if (img) {
+    x.save(); x.filter = 'blur(70px)'; x.globalAlpha = .4;
+    if (x.filter === 'blur(70px)') x.drawImage(img, -300, -300, 1680, 1680);
+    x.restore();
+    const g = x.createLinearGradient(0, 600, 0, 1400); g.addColorStop(0, 'rgba(10,10,12,0)'); g.addColorStop(1, 'rgba(10,10,12,1)'); x.fillStyle = g; x.fillRect(0, 600, 1080, 1320);
+  }
+  storyLogo(x, 150);
+  x.save(); x.shadowColor = 'rgba(0,0,0,.7)'; x.shadowBlur = 60; x.shadowOffsetY = 30; x.fillStyle = '#000'; rr(x, 160, 220, 760, 760, 30); x.fill(); x.restore();
+  coverDraw(x, img, 160, 220, 760, 30);
+  const title = a.title.toUpperCase();
+  const fs = shrinkFont(x, title, 960, 78, 46, F.osw);
+  txt(x, title, 540, 1090, F.osw(fs), '#f3f3f5', 'center');
+  txt(x, a.artist, 540, 1152, F.int(44, 800), '#ff3b3b', 'center');
+  txt(x, [a.year, (l.tags || [])[0] || a.genre, fmtDate(l.date)].filter(Boolean).join('  ·  '), 540, 1206, F.int(30, 500), '#8d8d96', 'center');
+  x.font = F.osw(230); x.textAlign = 'center'; x.fillStyle = s != null ? scoreColor(s) : '#5d5d66'; x.fillText(fmtScore(s), 520, 1450);
+  const sw = x.measureText(fmtScore(s)).width; txt(x, '/10', 520 + sw / 2 + 12, 1450, F.osw(60), '#5d5d66', 'left', 200);
+  const top = l.tracks.filter(t => !t.skip && t.score != null).sort((p, q) => q.score - p.score || q.fav - p.fav).slice(0, 3);
+  let Y = 1540;
+  top.forEach(t => {
+    txt(x, (t.fav ? '★ ' : '') + t.title, 120, Y + 44, F.int(38, 700), '#f3f3f5', 'left', 700);
+    canvasBadge(x, t.score, 960, Y, 62);
+    Y += 92;
+  });
+  txt(x, 'gece albüm günlüğü', 540, 1870, F.int(26, 600), '#5d5d66', 'center');
+}
+async function drawWrapStory(x, withImg, year, X, o) {
+  storyBg(x);
+  storyLogo(x, 140);
+  txt(x, String(year), 540, 380, F.osw(230), '#ff3b3b', 'center');
+  txt(x, 'ÖZETİN', 540, 470, F.osw(78), '#f3f3f5', 'center');
+  const kp = [[X.logs.length, 'albüm'], [X.ms ? Math.round(X.ms / 36e5) : 0, 'saat'], [fmtScore(X.avg), 'ort. puan'], [X.best, 'gün seri']];
+  kp.forEach(([n, l], i) => {
+    const bx = 80 + (i % 2) * 470, by = 530 + Math.floor(i / 2) * 190;
+    x.fillStyle = 'rgba(28,28,33,.9)'; rr(x, bx, by, 450, 170, 26); x.fill(); x.strokeStyle = '#2b2b31'; x.lineWidth = 2; x.stroke();
+    txt(x, String(n), bx + 34, by + 100, F.osw(84), i === 2 ? scoreColor(X.avg) : '#f3f3f5', 'left', 400);
+    txt(x, l, bx + 36, by + 145, F.int(30, 600), '#8d8d96', 'left', 400);
+  });
+  txt(x, 'EN İYİ 5 ALBÜM', 80, 970, F.int(30, 800), '#8d8d96', 'left');
+  const top = X.topAlbums.slice(0, 5);
+  const imgs = withImg ? await Promise.all(top.map(t => loadImg(t.l.album.thumb || t.l.album.cover))) : top.map(() => null);
+  top.forEach((t, i) => {
+    const Y = 1000 + i * 148;
+    txt(x, String(i + 1), 100, Y + 80, F.osw(48), '#5d5d66', 'center', 60);
+    coverDraw(x, imgs[i], 140, Y, 124, 16);
+    txt(x, t.l.album.title, 292, Y + 54, F.int(38, 800), '#f3f3f5', 'left', 560);
+    txt(x, t.l.album.artist, 292, Y + 100, F.int(30, 600), '#8d8d96', 'left', 560);
+    canvasBadge(x, t.s, 1000, Y + 32, 62);
+  });
+  const line = [o.topAr && `Yılın grubu: ${o.topAr.k}`, o.topTag && `Tür: ${o.topTag[0]}`].filter(Boolean).join('   ·   ');
+  txt(x, line, 540, 1790, F.int(32, 700), '#f3f3f5', 'center', 960);
+  if (o.topT) txt(x, `Yılın şarkısı: ${o.topT.title}`, 540, 1840, F.int(28, 600), '#ff6a2b', 'center', 960);
+  txt(x, 'gece albüm günlüğü', 540, 1892, F.int(22, 600), '#5d5d66', 'center');
+}
+
+
+/* =========================================================
+   WIKIPEDIA — album background card
+   ========================================================= */
+const WKEY = 'ritual.wiki';
+function wikiCacheAll() { try { return JSON.parse(localStorage.getItem(WKEY) || '{}'); } catch (e) { return {}; } }
+function wikiCacheGet(k) { return wikiCacheAll()[k] || null; }
+function wikiCacheSet(k, v) {
+  try {
+    const c = wikiCacheAll(); c[k] = v;
+    const ks = Object.keys(c);
+    if (ks.length > 80) ks.sort((a, b) => (c[a].at || 0) - (c[b].at || 0)).slice(0, ks.length - 80).forEach(x => delete c[x]);
+    localStorage.setItem(WKEY, JSON.stringify(c));
+  } catch (e) {}
+}
+function wapi(lang, params) {
+  const q = new URLSearchParams({ format: 'json', origin: '*', formatversion: '2', ...params });
+  return fetch(`https://${lang}.wikipedia.org/w/api.php?${q}`).then(r => { if (!r.ok) throw new Error('wiki ' + r.status); return r.json(); });
+}
+async function wikiSearch(album) {
+  const d = await wapi('en', { action: 'query', list: 'search', srsearch: `${album.title} ${album.artist} album`, srlimit: '8', srprop: 'snippet' });
+  const res = (d.query && d.query.search) || [];
+  const nt = normT(album.title), na = normA(album.artist);
+  return res.map(r => {
+    const base = r.title.replace(/\s*\([^)]*\)\s*$/, '');
+    const par = ((r.title.match(/\(([^)]*)\)\s*$/) || [, ''])[1]).toLowerCase();
+    const snip = strip(r.snippet.replace(/<[^>]+>/g, ''));
+    const nb = normT(base);
+    let sc = 0;
+    if (nb === nt) sc += 10; else if (nb && nt && (nb.includes(nt) || nt.includes(nb))) sc += 4;
+    if (/\b(album|ep)\b/.test(par)) sc += 5;
+    if (na && normA(par).includes(na)) sc += 4;
+    if (na && snip.replace(/[^a-z0-9ıi]/g, '').includes(na)) sc += 3;
+    if (/album/.test(snip)) sc += 2;
+    if (/\b(song|single|film|novel|band|tv)\b/.test(par)) sc -= 6;
+    return { title: r.title, s: sc };
+  }).sort((a, b) => b.s - a.s);
+}
+const WSKIP = /^(references|external links|notes|track listing|charts|weekly charts|year-end charts|certifications|certifications and sales|see also|further reading|sources|citations|bibliography|footnotes|kaynakça|kaynaklar|dış bağlantılar|şarkı listesi|notlar|ayrıca bakınız|listeler|sertifikalar|parça listesi)$/i;
+function parseExtract(t) {
+  const intro = [], secs = []; let cur = null;
+  for (const ln of String(t || '').split('\n')) {
+    const m = ln.match(/^(={2,})\s*(.+?)\s*\1\s*$/);
+    if (m) { if (m[1].length === 2) { cur = { h: m[2], parts: [] }; secs.push(cur); } else if (cur) cur.parts.push({ sub: m[2] }); continue; }
+    const x = ln.trim(); if (!x) continue;
+    if (cur) cur.parts.push({ p: x }); else intro.push(x);
+  }
+  const out = secs.filter(x => !WSKIP.test(x.h) && x.parts.some(y => y.p)).slice(0, 12);
+  out.forEach(x => { let n = 0; x.parts = x.parts.filter(y => { if (n > 3500) return false; n += (y.p || '').length; return true; }); });
+  return { intro: intro.slice(0, 3), sections: out };
+}
+const WLABEL = [[/^background|^history/i, 'Arka plan'], [/recording|production|writing/i, 'Kayıt & prodüksiyon'], [/composition|music|lyric|style|songs|theme|concept/i, 'Müzik & sözler'], [/artwork|cover|packaging|title/i, 'Kapak & isim'], [/release|promotion|tour/i, 'Yayın & turne'], [/reception|critical|review/i, 'Eleştiriler'], [/commercial|sales|chart performance/i, 'Ticari başarı'], [/legacy|influence|impact|accolade|ranking|honou?r/i, 'Miras'], [/personnel|credits|line-?up/i, 'Kadro'], [/controvers|lawsuit/i, 'Tartışmalar'], [/reissue|remaster|edition/i, 'Yeniden basımlar']];
+const wLabel = h => { for (const [r, l] of WLABEL) if (r.test(h)) return l; return h; };
+async function wikiPage(lang, title) {
+  const d = await wapi(lang, { action: 'query', prop: 'extracts|langlinks|info', explaintext: '1', exsectionformat: 'wikitext', titles: title, lllang: 'tr', inprop: 'url', redirects: '1' });
+  const p = d.query && d.query.pages && d.query.pages[0];
+  if (!p || p.missing) throw new Error('missing');
+  return { title: p.title, url: p.fullurl, raw: p.extract || '', ...parseExtract(p.extract), trTitle: (p.langlinks && p.langlinks[0] && p.langlinks[0].title) || null };
+}
+const IB = { released: 'Çıkış', recorded: 'Kayıt', studio: 'Stüdyo', venue: 'Mekan', genre: 'Tür', length: 'Süre', label: 'Plak şirketi', producer: 'Prodüktör' };
+function wtmpl(inner) {
+  const parts = inner.split('|').map(x => x.trim()); const name = (parts[0] || '').toLowerCase(); const args = parts.slice(1);
+  const pos = args.filter(a => !/^[a-z_]+\s*=/i.test(a)); const named = {};
+  args.forEach(a => { const m = a.match(/^([a-z_]+)\s*=\s*([\s\S]*)$/i); if (m) named[m[1].toLowerCase()] = m[2]; });
+  if (/^(start date|release date|start-date|film date)/.test(name)) {
+    const [y, m, d] = pos.map(Number); if (!y) return '';
+    if (m && d) return new Date(y, m - 1, d).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+    if (m) return new Date(y, m - 1, 1).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+    return String(y);
+  }
+  if (name === 'duration') {
+    let [h, m, sec] = pos.length >= 3 ? pos.map(Number) : [0, ...pos.map(Number)];
+    h = +named.h || h || 0; m = +named.m || m || 0; sec = +named.s || sec || 0;
+    return h ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`;
+  }
+  if (/^(hlist|flatlist|plainlist|ubl|unbulleted list|flat list|plain list|bulleted list)$/.test(name)) return '\n' + pos.join('\n') + '\n';
+  if (/^(nowrap|small|nobr|nobold|lang)$/.test(name)) return pos[pos.length - 1] || '';
+  return '';
+}
+function wclean(v) {
+  v = v.replace(/<!--[\s\S]*?-->/g, '').replace(/<ref[^>]*\/>/gi, '').replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, '').replace(/<br\s*\/?>/gi, '\n');
+  v = v.replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, '$1');
+  for (let n = 0; n < 12 && /\{\{[^{}]*\}\}/.test(v); n++) v = v.replace(/\{\{([^{}]*)\}\}/g, (_, inner) => wtmpl(inner));
+  v = v.replace(/\{\{|\}\}/g, '').replace(/\[https?:\/\/\S+\s([^\]]+)\]/g, '$1').replace(/'{2,}/g, '').replace(/<[^>]+>/g, '');
+  v = v.split('\n').map(x => x.replace(/^\s*[*#]\s*/, '').trim()).filter(Boolean).join(', ');
+  v = v.replace(/\s*,\s*(,\s*)+/g, ', ').replace(/\s+/g, ' ').replace(/^[,\s]+|[,\s]+$/g, '');
+  return v.length > 170 ? v.slice(0, 167) + '…' : v;
+}
+function parseInfobox(wt) {
+  wt = String(wt || '').replace(/<!--[\s\S]*?-->/g, '');
+  const i = wt.search(/\{\{\s*Infobox album/i); if (i < 0) return [];
+  let depth = 0, j = i;
+  for (; j < wt.length; j++) {
+    if (wt.startsWith('{{', j)) { depth++; j++; }
+    else if (wt.startsWith('}}', j)) { depth--; j++; if (depth === 0) break; }
+  }
+  const box = wt.slice(i + 2, j - 1);
+  const parts = []; let d = 0, sq = 0, buf = '';
+  for (let k = 0; k < box.length; k++) {
+    const c = box[k], n = box[k + 1];
+    if (c === '{' && n === '{') { d++; buf += '{{'; k++; continue; }
+    if (c === '}' && n === '}') { d--; buf += '}}'; k++; continue; }
+    if (c === '[' && n === '[') { sq++; buf += '[['; k++; continue; }
+    if (c === ']' && n === ']') { sq--; buf += ']]'; k++; continue; }
+    if (c === '|' && d === 0 && sq === 0) { parts.push(buf); buf = ''; continue; }
+    buf += c;
+  }
+  parts.push(buf);
+  const out = [];
+  for (const p of parts) {
+    const m = p.match(/^\s*([a-z_ ]+?)\s*=([\s\S]*)$/i); if (!m) continue;
+    const key = m[1].toLowerCase().trim();
+    if (IB[key] && !out.some(o => o[0] === IB[key])) { const v = wclean(m[2]); if (v) out.push([IB[key], v]); }
+  }
+  const order = Object.values(IB); out.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+  return out;
+}
+async function wikiFacts(title) {
+  const d = await wapi('en', { action: 'parse', page: title, prop: 'wikitext', section: '0', redirects: '1' });
+  return parseInfobox(d.parse && d.parse.wikitext);
+}
+const wikiPending = {};
+function wikiLoad(album, force) {
+  const k = albumKey(album);
+  if (!force) {
+    const c = wikiCacheGet(k);
+    if (c && (c.found || Date.now() - c.at < 3 * 864e5)) return Promise.resolve(c);
+    if (wikiPending[k]) return wikiPending[k];
+  }
+  const p = (async () => {
+    const cands = await wikiSearch(album).catch(() => []);
+    const pick = force && force.title ? { title: force.title, s: 99 } : cands[0];
+    const candTitles = cands.slice(0, 6).map(x => x.title);
+    const miss = () => { const v = { found: false, at: Date.now(), cands: candTitles }; wikiCacheSet(k, v); return v; };
+    if (!pick || pick.s < 12) return miss();
+    const page = await wikiPage('en', pick.title);
+    const na = normA(album.artist);
+    if (!force && na && !strip(page.raw).replace(/[^a-z0-9ıi]/g, '').includes(na)) return miss();
+    const facts = await wikiFacts(page.title).catch(() => []);
+    const v = { found: true, at: Date.now(), title: page.title, url: page.url, facts, cands: candTitles, en: { intro: page.intro, sections: page.sections }, tr: page.trTitle ? { title: page.trTitle } : null };
+    wikiCacheSet(k, v); return v;
+  })();
+  wikiPending[k] = p; p.finally(() => { delete wikiPending[k]; });
+  return p;
+}
+function wikiCardHtml(w, album) {
+  const head = `<div class="wk-h"><span>📖 Albüm hakkında</span><small>Wikipedia</small></div>`;
+  if (!w.found) return `<div class="card wiki">${head}<div class="muted" style="font-size:13px;margin-top:8px">Bu albüm için Wikipedia sayfası bulunamadı.</div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="chip" data-wpick>Sayfayı kendim seçeyim</button></div></div>`;
+  const L = w.en;
+  const facts = w.facts.filter(f => ['Kayıt', 'Stüdyo', 'Prodüktör', 'Plak şirketi', 'Süre'].includes(f[0])).slice(0, 4);
+  return `<div class="card wiki">${head}
+    ${facts.length ? `<div class="wfacts">${facts.map(([k, v]) => `<div class="kv"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join('')}</div>` : ''}
+    ${L.intro[0] ? `<p class="intro" lang="en">${esc(L.intro.join(' '))}</p>` : ''}
+    ${L.sections.length ? `<div class="wchips">${L.sections.map((x, i) => `<button class="chip" data-wsec="${i}">${esc(wLabel(x.h))}</button>`).join('')}</div>` : ''}
+    <button class="btn block" data-wall style="margin-top:12px">Tümünü oku${w.tr ? ' · Türkçesi de var' : ''} →</button></div>`;
+}
+async function mountWikiCard(el, album) {
+  if (!el) return;
+  const cached = wikiCacheGet(albumKey(album));
+  if (!cached) el.innerHTML = `<div class="card wiki"><div class="wk-h"><span>📖 Albüm hakkında</span><small>Wikipedia</small></div><div class="wsk"><i></i><i></i><i style="width:60%"></i></div></div>`;
+  const bind = w => {
+    el.innerHTML = wikiCardHtml(w, album);
+    $$('[data-wsec]', el).forEach(b => b.onclick = () => openWiki(album, +b.dataset.wsec));
+    const all = $('[data-wall]', el); if (all) all.onclick = () => openWiki(album);
+    const pk = $('[data-wpick]', el); if (pk) pk.onclick = () => openWikiPicker(album, () => mountWikiCard(el, album));
+  };
+  try { const w = await wikiLoad(album); if (el.isConnected) bind(w); }
+  catch (e) {
+    if (!el.isConnected) return;
+    if (cached) return bind(cached);
+    el.innerHTML = `<div class="card wiki"><div class="wk-h"><span>📖 Albüm hakkında</span><small>Wikipedia</small></div><div class="muted" style="font-size:13px;margin-top:8px">Wikipedia'ya ulaşılamadı.</div><button class="chip" data-retry style="margin-top:10px">Tekrar dene</button></div>`;
+    $('[data-retry]', el).onclick = () => mountWikiCard(el, album);
+  }
+}
+function wikiBodyHtml(w, lang) {
+  const L = lang === 'tr' && w.tr && w.tr.intro ? w.tr : w.en;
+  const pageUrl = lang === 'tr' && w.tr && w.tr.url ? w.tr.url : w.url;
+  const secHtml = (x, i) => {
+    const isPers = /personnel|credits|line-?up|kadro|personel|ekip/i.test(x.h);
+    const body = x.parts.map(y => {
+      if (y.sub) return `<div class="wsub">${esc(y.sub)}</div>`;
+      const m = isPers && y.p.match(/^(.{2,48}?)\s+[–—-]\s+(.+)$/);
+      if (m) return `<div class="kv"><span style="color:var(--text);font-weight:700">${esc(m[1])}</span><span class="muted" style="text-align:right">${esc(m[2])}</span></div>`;
+      if (isPers && y.p.length <= 32 && !/[.:;]$/.test(y.p)) return `<div class="wsub">${esc(y.p)}</div>`;
+      return `<p>${esc(y.p)}</p>`;
+    }).join('');
+    return `<div class="wsec" id="wsec-${i}"><h4>${esc(lang === 'tr' ? x.h : wLabel(x.h))}${lang !== 'tr' && wLabel(x.h) !== x.h ? `<small>${esc(x.h)}</small>` : ''}</h4>${body}</div>`;
+  };
+  return `
+    ${w.tr ? `<div class="chips" style="margin-bottom:12px"><button class="chip ${lang !== 'tr' ? 'on' : ''}" data-wl="en">English</button><button class="chip ${lang === 'tr' ? 'on' : ''}" data-wl="tr">Türkçe</button></div>` : ''}
+    ${w.facts.length ? `<div class="card" style="padding:4px 14px;margin-bottom:14px">${w.facts.map(([k, v]) => `<div class="kv"><span>${esc(k)}</span><span style="text-align:right">${esc(v)}</span></div>`).join('')}</div>` : ''}
+    <div class="wtext" lang="${lang === 'tr' ? 'tr' : 'en'}">
+      ${L.intro.map(p => `<p>${esc(p)}</p>`).join('')}
+      ${L.sections.map(secHtml).join('')}
+    </div>
+    <div class="muted" style="font-size:12px;margin-top:18px;line-height:1.5">Kaynak: <a href="${esc(pageUrl)}" target="_blank" rel="noopener" style="color:var(--red2)">Wikipedia — ${esc(L.title || w.title)}</a> (CC BY-SA 4.0). Metin kısaltılmış olabilir.</div>
+    <button class="btn sm ghost" data-wpick style="margin-top:8px;color:var(--mute)">Yanlış sayfa mı? Başka sayfa seç</button>`;
+}
+function openWiki(album, secIdx, lang = 'en') {
+  const w = wikiCacheGet(albumKey(album)); if (!w || !w.found) return;
+  openSheet(w.title || album.title, '<div id="wbody"></div>', (sh, close) => {
+    const body = $('#wbody', sh);
+    const draw = async lg => {
+      if (lg === 'tr' && w.tr && !w.tr.intro) {
+        body.innerHTML = '<div class="spinner"></div>';
+        try { const p = await wikiPage('tr', w.tr.title); Object.assign(w.tr, { title: p.title, url: p.url, intro: p.intro, sections: p.sections }); wikiCacheSet(albumKey(album), w); }
+        catch (e) { toast('Türkçe sayfa yüklenemedi'); lg = 'en'; }
+      }
+      body.innerHTML = wikiBodyHtml(w, lg);
+      $$('[data-wl]', body).forEach(b => b.onclick = () => draw(b.dataset.wl));
+      $('[data-wpick]', body).onclick = () => { close(); setTimeout(() => openWikiPicker(album, () => { const el = $('#wikiCard'); if (el) mountWikiCard(el, album); openWiki(album); }), 320); };
+    };
+    draw(lang).then(() => {
+      if (secIdx != null) { const t = $('#wsec-' + secIdx, sh); if (t) setTimeout(() => t.scrollIntoView({ block: 'start', behavior: 'smooth' }), 350); }
+    });
+  }, { full: true, lang: 'en' });
+}
+function openWikiPicker(album, done) {
+  const w = wikiCacheGet(albumKey(album)) || { cands: [] };
+  openSheet('Wikipedia sayfası seç', `
+    <div class="muted" style="font-size:13px">${esc(album.artist)} — ${esc(album.title)} için doğru sayfayı seç ya da adını yaz.</div>
+    ${(w.cands || []).length ? `<div class="card" style="padding:4px 12px;margin-top:12px">${w.cands.map(c => `<div class="kv" data-wt="${esc(c)}" style="cursor:pointer"><span style="color:var(--text);font-weight:600">${esc(c)}</span><span>›</span></div>`).join('')}</div>` : ''}
+    <label class="lbl">Sayfa adı</label><input class="field" id="wtIn" placeholder="ör. Master of Puppets" value="">
+    <button class="btn red block" id="wtGo" style="margin-top:12px">Bu sayfayı kullan</button>`, (sh, close) => {
+    const use = async title => {
+      if (!title) return;
+      const b = $('#wtGo', sh); b.textContent = 'Yükleniyor…';
+      try { const v = await wikiLoad(album, { title }); if (!v.found) throw new Error(); close(); toast('Sayfa güncellendi ✓'); done && done(); }
+      catch (e) { b.textContent = 'Bu sayfayı kullan'; toast('Sayfa bulunamadı'); }
+    };
+    $$('[data-wt]', sh).forEach(r => r.onclick = () => use(r.dataset.wt));
+    $('#wtGo', sh).onclick = () => use($('#wtIn', sh).value.trim());
+  });
+}
+
+/* =========================================================
+   SETTINGS / BACKUP
+   ========================================================= */
+function openSettings() {
+  const last = S.settings.lastBackup;
+  let size = 0; try { size = (localStorage.getItem(KEY) || '').length; } catch (e) {}
+  openSheet('Ayarlar', `
+    <label class="lbl">Müzik mağazası ülkesi (Apple Music araması)</label>
+    <select class="field" id="sCountry">${[['US', 'ABD'], ['NL', 'Hollanda'], ['TR', 'Türkiye'], ['GB', 'İngiltere'], ['DE', 'Almanya'], ['SE', 'İsveç'], ['FI', 'Finlandiya'], ['NO', 'Norveç']].map(([k, v]) => `<option value="${k}" ${S.settings.country === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
+
+    <div class="h-sec">Yedekleme</div>
+    <div class="card" style="padding:14px">
+      <div style="font-size:14px">Verilerin bu telefonda saklanıyor. Telefon değiştirirsen veya tarayıcı verisini silersen kaybolmasın diye ara sıra yedek al.</div>
+      <div class="muted" style="font-size:12px;margin-top:8px">Son yedek: ${last ? fmtDate(last) : 'hiç alınmadı'} · ${S.logs.length} seans · ${S.concerts.length} konser · ${S.collection.length} raf · ${(size / 1024).toFixed(0)} KB</div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn block" id="sExport">Yedeği indir</button>
+        <label class="btn block" style="cursor:pointer">Yedeği yükle<input type="file" id="sImport" accept="application/json,.json" class="hidden"></label>
+      </div>
+    </div>
+
+    <div class="h-sec">Ana ekrana ekle</div>
+    <div class="card" style="padding:14px;font-size:14px;color:#ccc">
+      <b>iPhone:</b> Safari'de Paylaş <span style="opacity:.7">⬆︎</span> → <i>Ana Ekrana Ekle</i>.<br>
+      <b>Android:</b> Chrome menüsü ⋮ → <i>Uygulamayı yükle</i>.<br>
+      <span class="muted" style="font-size:12px">Böylece tam ekran uygulama gibi açılır ve verilerin daha güvende kalır.</span>
+    </div>
+
+    <div class="h-sec">Tehlikeli bölge</div>
+    <button class="btn block" id="sWipe" style="color:var(--red2)">Tüm verileri sil</button>
+    <div class="muted" style="font-size:12px;text-align:center;margin-top:18px">Ritüel · albüm verisi Apple Music & Deezer · ülkeler MusicBrainz</div>
+  `, (sh, close) => {
+    $('#sCountry', sh).onchange = e => { S.settings.country = e.target.value; save(); toast('Kaydedildi'); };
+    $('#sExport', sh).onclick = async () => {
+      const { draft, ...rest } = S;
+      const data = JSON.stringify({ app: 'ritual', exportedAt: new Date().toISOString(), ...rest });
+      const name = `ritual-yedek-${today()}.json`;
+      const file = new File([data], name, { type: 'application/json' });
+      try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: 'Ritüel yedeği' });
+        else download(URL.createObjectURL(file), name);
+        S.settings.lastBackup = today(); save(); toast('Yedek hazır ✓');
+      } catch (e) { if (e.name !== 'AbortError') toast('Yedek alınamadı'); }
+    };
+    $('#sImport', sh).onchange = async e => {
+      const f = e.target.files[0]; if (!f) return;
+      try {
+        const d = JSON.parse(await f.text());
+        if (!Array.isArray(d.logs)) throw new Error('bad');
+        const ok = await dialog({ title: 'Yedek yüklensin mi?', text: `${d.logs.length} seans bulundu. Mevcut kayıtlarla birleştirilecek (aynı kayıtlar güncellenir).`, ok: 'Yükle' });
+        if (!ok) return;
+        ['logs', 'queue', 'journeys', 'concerts', 'collection'].forEach(k => {
+          if (!Array.isArray(d[k])) return;
+          const m = new Map(S[k].map(x => [x.id, x])); d[k].forEach(x => m.set(x.id, x)); S[k] = [...m.values()];
+        });
+        if (d.meta && d.meta.countries) S.meta.countries = { ...d.meta.countries, ...S.meta.countries };
+        save(); close(); render(); toast(`${d.logs.length} seans yüklendi ✓`); checkBadges();
+      } catch (err) { toast('Geçersiz yedek dosyası'); }
+    };
+    $('#sWipe', sh).onclick = async () => {
+      if (!(await dialog({ title: 'Her şey silinsin mi?', text: 'Tüm seanslar, puanlar, konserler ve raf kalıcı olarak silinecek. Önce yedek almanı öneririm.', ok: 'Hepsini sil' }))) return;
+      S = blank(); S.settings.badgesInit = true; save(); close(); render(); toast('Tüm veriler silindi');
+    };
+  });
+}
+
+/* =========================================================
+   BOOT
+   ========================================================= */
+if (!S.settings.badgesInit) { S.badges = badgeDefs().filter(b => b.on).map(b => b.id); S.settings.badgesInit = true; save(); }
+render();
+setTimeout(resolveCountries, 2500);
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+window.__ritual = { get S() { return S; }, render, checkBadges };
+})();
+
+</script>
+</body>
+</html>
