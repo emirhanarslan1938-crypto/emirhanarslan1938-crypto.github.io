@@ -357,6 +357,7 @@ nav.tabs button{font-size:10.5px}
    STORAGE
    ========================================================= */
 const KEY = 'ritual.v1';
+const APP_VERSION = '2026.11.17-4';
 const ARRAYS = ['logs', 'queue', 'journeys', 'concerts', 'collection', 'badges'];
 const blank = () => ({
   v: 2, logs: [], queue: [], draft: null, journeys: [], concerts: [], collection: [], badges: [],
@@ -442,9 +443,11 @@ function toast(msg, ms = 2200) {
 }
 const flag = cc => cc && /^[A-Z]{2}$/.test(cc) ? String.fromCodePoint(...cc.split('').map(c => 127397 + c.charCodeAt(0))) : '🏳️';
 let _trN, _enN;
-const trName = cc => { try { _trN = _trN || new Intl.DisplayNames(['tr'], { type: 'region' }); return _trN.of(cc); } catch (e) { return cc; } };
+const TR_SHORT = { US: 'ABD', GB: 'Birleşik Krallık', AE: 'BAE' };
+const trName = cc => { if (TR_SHORT[cc]) return TR_SHORT[cc]; try { _trN = _trN || new Intl.DisplayNames(['tr'], { type: 'region' }); return _trN.of(cc); } catch (e) { return cc; } };
 const EN_ALIAS = { 'United States': 'United States of America', 'Bosnia & Herzegovina': 'Bosnia and Herz.', 'Dominican Republic': 'Dominican Rep.', 'Myanmar (Burma)': 'Myanmar', 'Côte d’Ivoire': "Côte d'Ivoire", 'Congo - Kinshasa': 'Dem. Rep. Congo', 'Congo - Brazzaville': 'Congo', 'Central African Republic': 'Central African Rep.', 'South Sudan': 'S. Sudan', 'Equatorial Guinea': 'Eq. Guinea', 'Solomon Islands': 'Solomon Is.', 'Falkland Islands': 'Falkland Is.', 'Western Sahara': 'W. Sahara', 'Eswatini': 'eSwatini', 'North Macedonia': 'Macedonia', 'Türkiye': 'Turkey' };
 const enName = cc => { try { _enN = _enN || new Intl.DisplayNames(['en'], { type: 'region' }); const n = _enN.of(cc); return EN_ALIAS[n] || n; } catch (e) { return cc; } };
+const ALL_CC = ["AF", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BV", "BR", "IO", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "KY", "CF", "TD", "CL", "CN", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HK", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MO", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "MS", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "MK", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN", "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "SH", "KN", "LC", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "GS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN", "VG", "VI", "WF", "EH", "YE", "ZM", "ZW", "AX", "BQ", "CW", "GG", "IM", "JE", "ME", "BL", "MF", "RS", "SX", "SS", "XK"];
 const COMMON_CC = 'US GB DE SE NO FI DK IS NL BE FR IT ES PT PL CZ AT CH GR TR RU UA HU RO RS HR BR AR CL CO MX CA AU NZ JP KR CN IN IL IE ZA'.split(' ');
 
 /* ---------- dialogs ---------- */
@@ -594,21 +597,28 @@ const API = {
     const r = await jsonp(`https://api.deezer.com/artist/${pick.id}/related?limit=15&output=jsonp`);
     return (r.data || []).map(a => ({ id: a.id, name: a.name, picture: a.picture_medium || a.picture, fans: a.nb_fan || 0 }));
   },
-  async mbCountry(name) {
+  async mbArtist(name) {
     const r = await fetch(`https://musicbrainz.org/ws/2/artist/?query=${enc('artist:"' + name.replace(/"/g, '') + '"')}&fmt=json&limit=5`);
-    if (!r.ok) throw new Error('mb ' + r.status);
+    if (!r.ok) throw new Error('MusicBrainz ' + r.status);
     const d = await r.json(); const arr = d.artists || []; const n = normA(name);
     const pick = arr.find(a => normA(a.name) === n && a.country) || arr.find(a => normA(a.name) === n) || (arr[0] && arr[0].score >= 95 ? arr[0] : null);
     let c = pick && pick.country;
     if (c && (c.length !== 2 || /^X/.test(c))) c = null;
-    return c || null;
+    const tags = pick && pick.tags ? [...pick.tags].sort((a, b) => (b.count || 0) - (a.count || 0)).map(t => t.name) : [];
+    return { c: c || null, tags };
   }
 };
 
 /* =========================================================
    DOMAIN
    ========================================================= */
-const SUBGENRES = ['Heavy', 'Thrash', 'Death', 'Melodic Death', 'Black', 'Doom', 'Sludge', 'Stoner', 'Prog', 'Power', 'Groove', 'Nu Metal', 'Metalcore', 'Djent', 'Post-Metal', 'Symphonic', 'Folk', 'Industrial', 'Hard Rock', 'Classic Rock', 'Alt Rock', 'Grunge', 'Punk', 'Prog Rock'];
+const SUBGENRES = ['Heavy', 'Thrash', 'Speed', 'Death', 'Melodic Death', 'Black', 'Doom', 'Sludge', 'Stoner', 'Prog', 'Power', 'Groove', 'Alt Metal', 'Nu Metal', 'Metalcore', 'Deathcore', 'Djent', 'Post-Metal', 'Symphonic', 'Gothic', 'Folk', 'Industrial', 'Grindcore', 'Glam', 'Hard Rock', 'Classic Rock', 'Blues Rock', 'Psych Rock', 'Alt Rock', 'Grunge', 'Punk', 'Prog Rock'];
+const GENRE_MAP = [[/melodic death/, 'Melodic Death'], [/deathcore/, 'Deathcore'], [/death metal/, 'Death'], [/black metal|black n roll/, 'Black'], [/thrash/, 'Thrash'], [/speed metal/, 'Speed'], [/doom/, 'Doom'], [/sludge/, 'Sludge'], [/stoner|desert rock/, 'Stoner'], [/progressive metal|prog metal|technical metal/, 'Prog'], [/progressive rock|prog rock|art rock/, 'Prog Rock'], [/power metal/, 'Power'], [/groove metal/, 'Groove'], [/nu metal|nu-metal/, 'Nu Metal'], [/metalcore/, 'Metalcore'], [/djent/, 'Djent'], [/post-metal|post metal/, 'Post-Metal'], [/symphonic/, 'Symphonic'], [/gothic/, 'Gothic'], [/folk metal|viking metal|pagan metal/, 'Folk'], [/industrial/, 'Industrial'], [/grindcore|goregrind/, 'Grindcore'], [/glam|hair metal/, 'Glam'], [/alternative metal|alt-metal/, 'Alt Metal'], [/heavy metal|nwobhm|traditional metal/, 'Heavy'], [/hard rock/, 'Hard Rock'], [/grunge/, 'Grunge'], [/punk/, 'Punk'], [/alternative rock|indie rock/, 'Alt Rock'], [/psychedelic/, 'Psych Rock'], [/blues rock/, 'Blues Rock'], [/classic rock|^rock$|rock and roll|^rock music$/, 'Classic Rock']];
+function autoTags(list) {
+  const out = [];
+  for (const g of list || []) { const x = strip(g).trim(); for (const [r, t] of GENRE_MAP) if (r.test(x)) { if (!out.includes(t)) out.push(t); break; } }
+  return out.slice(0, 3);
+}
 const MEDIUMS = [['Plak', '💿 Plak'], ['CD', '📀 CD'], ['Kaset', '📼 Kaset'], ['Kulaklık', '🎧 Kulaklık'], ['Hoparlör', '🔊 Hoparlör'], ['Araba', '🚗 Araba']];
 const FORMATS = [['Plak', 'Plak'], ['CD', 'CD'], ['Kaset', 'Kaset'], ['Dijital', 'Dijital']];
 
@@ -842,7 +852,7 @@ function renderSession(app) {
         ${coverHtml(a, 'min(68vw,280px)', 600)}
         <h2 lang="en">${esc(a.title)}</h2>
         <div class="artist">${esc(a.artist)}</div>
-        <div class="meta">${[a.year, a.genre, D.tracks.length + ' şarkı', len ? fmtLen(len) : ''].filter(Boolean).map(esc).join(' · ')}</div>
+        <div class="meta" id="sessMeta">${sessMetaHtml(D)}</div>
         ${PREV ? `<div class="relisten">🔁 ${nPrev + 1}. dinleyişin · önceki puanın ${fmtScore(finalScore(PREV.log))} (${fmtDateShort(PREV.log.date)} ${PREV.log.date.slice(0, 4)})</div>` : ''}
         <div class="links">
           <a class="chip" href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">▶ Spotify</a>
@@ -972,7 +982,7 @@ function renderSession(app) {
     const b = e.target.closest('[data-tag]'); if (!b) return;
     const g = b.dataset.tag; const k = D.tags.indexOf(g);
     if (k >= 0) D.tags.splice(k, 1); else D.tags.push(g);
-    b.classList.toggle('on'); persistDraft();
+    D.tagsTouched = true; b.classList.toggle('on'); persistDraft();
   });
   $('#note').addEventListener('input', e => { D.note = e.target.value; persistDraft(); });
   $('#date').addEventListener('change', e => { if (e.target.value) { D.date = e.target.value; persistDraft(); } });
@@ -984,7 +994,30 @@ function renderSession(app) {
   };
   $('#saveBtn').onclick = saveSession;
   updateSummary();
-  mountWikiCard($('#wikiCard'), a);
+  mountWikiCard($('#wikiCard'), a, w => {
+    const g = w && w.found ? ((w.facts.find(f => f[0] === 'Tür') || [])[1] || '') : '';
+    if (g) applyAutoGenre(D, g.split(', '), 'wiki');
+  });
+  ensureArtistMeta(a.artist).then(e => {
+    if (S.draft !== D) return;
+    const m = $('#sessMeta'); if (m) m.innerHTML = sessMetaHtml(D);
+    if (e && e.tags && e.tags.length && !D.album.genreFull) applyAutoGenre(D, e.tags, 'mb');
+  }).catch(() => {});
+}
+function sessMetaHtml(D) {
+  const a = D.album, len = totalMs(D.tracks), c = countryOf(a.artist);
+  const genre = a.genreFull || a.genre;
+  return `${c ? `${flag(c)} ${esc(trName(c))} · ` : ''}${[a.year, genre, D.tracks.length + ' şarkı', len ? fmtLen(len) : ''].filter(Boolean).map(esc).join(' · ')}`;
+}
+function applyAutoGenre(D, genres, source) {
+  if (!S.draft || S.draft !== D) return;
+  if (genres && genres.length && source === 'wiki') D.album.genreFull = genres.slice(0, 2).map(g => g.charAt(0).toUpperCase() + g.slice(1)).join(', ');
+  if (!D.tagsTouched) {
+    const t = autoTags(genres);
+    if (t.length && (source === 'wiki' || !D.tags.length)) { D.tags = t; const box = $('#tags'); if (box) $$('[data-tag]', box).forEach(b => b.classList.toggle('on', D.tags.includes(b.dataset.tag))); }
+  }
+  persistDraft();
+  const m = $('#sessMeta'); if (m) m.innerHTML = sessMetaHtml(D);
 }
 function refreshTracks() {
   const D = S.draft, list = $('#trackList'); if (!list) return;
@@ -1236,7 +1269,7 @@ function openDetail(id) {
       <div style="flex:1;min-width:0">
         <div lang="en" style="font-family:Oswald,'Arial Narrow',Impact,sans-serif;font-size:22px;line-height:1.1;text-transform:uppercase">${esc(a.title)}</div>
         <div style="color:var(--red2);font-weight:700;margin-top:4px">${esc(a.artist)}</div>
-        <div class="muted" style="font-size:13px;margin-top:4px">${[a.year, a.genre].filter(Boolean).map(esc).join(' · ')}</div>
+        <div class="muted" style="font-size:13px;margin-top:4px">${[a.year, a.genreFull || a.genre].filter(Boolean).map(esc).join(' · ')}</div>
         <div class="muted" style="font-size:12px;margin-top:2px">${esc(fmtDay(l.date))}${l.medium ? ' · ' + esc((MEDIUMS.find(m => m[0] === l.medium) || [, l.medium])[1]) : ''}</div>
       </div>
     </div>
@@ -1278,7 +1311,19 @@ function openDetail(id) {
       <button class="btn" id="dDel" style="color:var(--red2)">Sil</button>
     </div>
   `, (sh, close) => {
-    mountWikiCard($('#dWiki', sh), a);
+    mountWikiCard($('#dWiki', sh), a, w => {
+      const g = w && w.found ? ((w.facts.find(f => f[0] === 'Tür') || [])[1] || '') : '';
+      if (!g) return;
+      let ch = false;
+      if (!a.genreFull) { a.genreFull = g.split(', ').slice(0, 2).map(x => x.charAt(0).toUpperCase() + x.slice(1)).join(', '); ch = true; }
+      if (!(l.tags || []).length) { const t = autoTags(g.split(', ')); if (t.length) { l.tags = t; ch = true; } }
+      if (ch) save();
+    });
+    if (countryOf(a.artist) === undefined || needsMeta(normA(a.artist))) ensureArtistMeta(a.artist).then(e => {
+      const sel = $('#dCountry', sh); if (!sel || !e) return;
+      if (e.c) { if (![...sel.options].some(o => o.value === e.c)) sel.add(new Option(trName(e.c), e.c)); sel.value = e.c; const lab = sel.previousSibling; }
+      else if (sel.options[0]) sel.options[0].text = 'bilinmiyor';
+    }).catch(() => {});
     $('#dCountry', sh).onchange = e => {
       const v = e.target.value; S.meta.countries[normA(a.artist)] = { c: v || null, t: Date.now(), manual: true }; save(); toast('Ülke kaydedildi'); checkBadges();
     };
@@ -1785,7 +1830,7 @@ function renderStats(app) {
   Object.values(byKey).filter(v => v.length > 1).forEach(v => { const a = finalScore(v[0]), b = finalScore(v[v.length - 1]); if (a != null && b != null) changes.push({ l: v[v.length - 1], from: a, to: b, d: b - a, n: v.length }); });
   changes.sort((a, b) => Math.abs(b.d) - Math.abs(a.d));
   const ctryArr = Object.entries(X.countries).sort((a, b) => b[1] - a[1]);
-  const unknownC = new Set(logs.map(l => normA(l.album.artist)).filter(k => S.meta.countries[k] === undefined)).size;
+  const unknownC = new Set(logs.map(l => normA(l.album.artist)).filter(k => needsMeta(k))).size;
 
   const by = logsByDate();
   const end = new Date(); const start = new Date(); start.setDate(end.getDate() - 7 * 26 + 1); start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
@@ -1820,7 +1865,8 @@ function renderStats(app) {
     <div class="card" style="padding:12px" id="countrySec">
       <div class="map" id="map"></div>
       ${ctryArr.length ? `<div class="bars flags" style="margin-top:6px">${ctryArr.slice(0, 8).map(([c, n]) => `<div class="br"><span class="k">${flag(c)} ${esc(trName(c))}</span><span class="v"><i style="width:${n / ctryArr[0][1] * 100}%"></i></span><span class="x">${n}</span></div>`).join('')}</div>` : ''}
-      ${unknownC ? `<div class="muted" style="font-size:12px;margin-top:8px;text-align:center">${unknownC} grubun ülkesi MusicBrainz'den getiriliyor…</div>` : ''}
+      ${unknownC ? `<div class="muted" style="font-size:12px;margin-top:8px;text-align:center">${unknownC} grubun ülkesi getiriliyor…</div>` : ''}
+      ${!unknownC && !ctryArr.length ? `<div class="muted" style="font-size:12px;margin-top:8px;text-align:center">Ülke bilgisi alınamadı${S.meta.lastErr ? ' (' + esc(S.meta.lastErr.msg) + ')' : ''}. <button class="chip" id="ccRetry" style="margin-top:6px">Tekrar dene</button></div>` : ''}
     </div>
 
     <div class="h-sec">En iyi albümler</div>
@@ -1854,11 +1900,39 @@ function renderStats(app) {
   $('#wrapBtn').onclick = () => openWrapped(wrapYear);
   bindCommon(app);
   drawMap($('#map'), X.countries);
+  if ($('#ccRetry')) $('#ccRetry').onclick = () => { Object.keys(S.meta.countries).forEach(k => { const e = S.meta.countries[k]; if (!e.c && !e.manual) delete S.meta.countries[k]; }); save(); toast('Ülkeler yeniden aranıyor…'); resolveCountries(); };
   resolveCountries();
 }
 
 /* ---------- countries (MusicBrainz) + map ---------- */
 let ccRunning = false;
+function needsMeta(k) {
+  const e = S.meta.countries[k];
+  if (!e) return true;
+  if (e.c || e.manual) return false;
+  if (e.retryAt) return Date.now() > e.retryAt;
+  return Date.now() - e.t > 7 * 864e5;
+}
+const metaPending = {};
+function ensureArtistMeta(name) {
+  const k = normA(name);
+  if (!needsMeta(k)) return Promise.resolve(S.meta.countries[k]);
+  if (metaPending[k]) return metaPending[k];
+  const p = (async () => {
+    let c = null, tags = [], err = null;
+    try { const r = await API.mbArtist(name); c = r.c; tags = r.tags; } catch (e) { err = e; S.meta.lastErr = { src: 'MusicBrainz', msg: String(e.message || e), at: Date.now() }; }
+    if (!c) {
+      try { const w = await wikiArtist(name); if (w.c) c = w.c; if (!tags.length && w.genres.length) tags = w.genres; err = null; }
+      catch (e) { err = err || e; }
+    }
+    const prev = S.meta.countries[k] || {};
+    S.meta.countries[k] = c ? { c, tags, t: Date.now() } : (err ? { c: null, tags: prev.tags || tags, t: Date.now(), retryAt: Date.now() + 10 * 60e3 } : { c: null, tags, t: Date.now() });
+    save();
+    return S.meta.countries[k];
+  })();
+  metaPending[k] = p; p.finally(() => { delete metaPending[k]; });
+  return p;
+}
 function refreshStatsSoft() { if (view === 'istatistik' && !sheetStack.length) { const y = window.scrollY; render(); window.scrollTo(0, y); } }
 async function resolveCountries() {
   if (ccRunning) return; ccRunning = true; let fetched = 0;
@@ -1867,11 +1941,9 @@ async function resolveCountries() {
     S.logs.forEach(l => names.set(normA(l.album.artist), l.album.artist));
     S.concerts.forEach(c => names.set(normA(c.artist), c.artist));
     for (const [k, name] of names) {
-      const e = S.meta.countries[k];
-      if (e && (e.c || e.manual || Date.now() - e.t < 7 * 864e5)) continue;
-      try { const c = await API.mbCountry(name); S.meta.countries[k] = { c, t: Date.now() }; }
-      catch (err) { S.meta.countries[k] = { c: null, t: Date.now() - 6 * 864e5 }; }
-      save(); fetched++;
+      if (!needsMeta(k)) continue;
+      await ensureArtistMeta(name);
+      fetched++;
       if (fetched % 6 === 0) refreshStatsSoft();
       await sleep(1150);
     }
@@ -1883,13 +1955,9 @@ function loadScript(src) { return new Promise((res, rej) => { const s = document
 function getWorld() {
   if (worldP) return worldP;
   worldP = (async () => {
-    if (!window.d3) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js');
-    if (!window.topojson) await loadScript('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js');
-    const w = await (await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')).json();
-    const fc = topojson.feature(w, w.objects.countries);
-    fc.features = fc.features.filter(f => f.properties.name !== 'Antarctica');
-    worldReady = true;
-    return fc;
+    const r = await fetch('world.json');
+    if (!r.ok) throw new Error('world ' + r.status);
+    const w = await r.json(); worldReady = true; return w;
   })();
   worldP.catch(() => { worldP = null; });
   return worldP;
@@ -1904,16 +1972,12 @@ async function drawMap(el, counts) {
   try {
     const geo = await getWorld();
     if (!el.isConnected) return;
-    const W = 600, H = 300;
-    const proj = d3.geoNaturalEarth1().fitSize([W, H], geo);
-    const path = d3.geoPath(proj);
-    const byName = {}; for (const [c, n] of Object.entries(counts)) byName[enName(c)] = n;
     const max = Math.max(1, ...Object.values(counts));
-    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${geo.features.map(f => {
-      const n = byName[f.properties.name];
-      return `<path d="${path(f)}" fill="${n ? mixRed(.25 + .75 * n / max) : '#202027'}" stroke="#0a0a0c" stroke-width=".6"><title>${esc(f.properties.name)}${n ? ': ' + n : ''}</title></path>`;
+    el.innerHTML = `<svg viewBox="0 0 ${geo.w} ${geo.h}" style="width:100%;height:auto;display:block">${geo.p.map(([c, d]) => {
+      const n = counts[c];
+      return `<path d="${d}" fill="${n ? mixRed(.25 + .75 * n / max) : '#202027'}" stroke="#0a0a0c" stroke-width=".6"><title>${esc(c ? trName(c) : '')}${n ? ': ' + n : ''}</title></path>`;
     }).join('')}</svg>`;
-  } catch (e) { if (el.isConnected) el.innerHTML = ''; }
+  } catch (e) { if (el.isConnected) el.innerHTML = `<div class="muted" style="font-size:12px;text-align:center;padding:20px 0">Harita yüklenemedi (${esc(e.message || e)})</div>`; }
 }
 
 /* =========================================================
@@ -2186,9 +2250,9 @@ function wclean(v) {
   v = v.replace(/\s*,\s*(,\s*)+/g, ', ').replace(/\s+/g, ' ').replace(/^[,\s]+|[,\s]+$/g, '');
   return v.length > 170 ? v.slice(0, 167) + '…' : v;
 }
-function parseInfobox(wt) {
+function parseInfobox(wt, re = /\{\{\s*Infobox album/i, fields = IB) {
   wt = String(wt || '').replace(/<!--[\s\S]*?-->/g, '');
-  const i = wt.search(/\{\{\s*Infobox album/i); if (i < 0) return [];
+  const i = wt.search(re); if (i < 0) return [];
   let depth = 0, j = i;
   for (; j < wt.length; j++) {
     if (wt.startsWith('{{', j)) { depth++; j++; }
@@ -2210,10 +2274,30 @@ function parseInfobox(wt) {
   for (const p of parts) {
     const m = p.match(/^\s*([a-z_ ]+?)\s*=([\s\S]*)$/i); if (!m) continue;
     const key = m[1].toLowerCase().trim();
-    if (IB[key] && !out.some(o => o[0] === IB[key])) { const v = wclean(m[2]); if (v) out.push([IB[key], v]); }
+    if (fields[key] && !out.some(o => o[0] === fields[key])) { const v = wclean(m[2]); if (v) out.push([fields[key], v]); }
   }
-  const order = Object.values(IB); out.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+  const order = Object.values(fields); out.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
   return out;
+}
+const CC_ALIAS = { 'u.s.': 'US', 'us': 'US', 'u.s': 'US', 'usa': 'US', 'u.s.a.': 'US', 'united states': 'US', 'united states of america': 'US', 'america': 'US', 'england': 'GB', 'scotland': 'GB', 'wales': 'GB', 'northern ireland': 'GB', 'uk': 'GB', 'u.k.': 'GB', 'united kingdom': 'GB', 'great britain': 'GB', 'britain': 'GB', 'russia': 'RU', 'south korea': 'KR', 'czech republic': 'CZ', 'czechia': 'CZ', 'holland': 'NL', 'the netherlands': 'NL', 'turkey': 'TR', 'türkiye': 'TR', 'west germany': 'DE', 'east germany': 'DE', 'soviet union': 'RU', 'yugoslavia': 'RS', 'ivory coast': 'CI' };
+let _ccByName = null;
+function ccFromPlace(text) {
+  if (!_ccByName) { _ccByName = {}; try { const dn = new Intl.DisplayNames(['en'], { type: 'region' }); ALL_CC.forEach(c => { const n = dn.of(c); if (n) _ccByName[n.toLowerCase()] = c; }); } catch (e) {} }
+  const parts = String(text || '').split(/[,;]/).map(x => x.replace(/\(.*?\)/g, '').trim().toLowerCase()).filter(Boolean);
+  for (let i = parts.length - 1; i >= 0; i--) { const x = parts[i]; if (CC_ALIAS[x]) return CC_ALIAS[x]; if (_ccByName[x]) return _ccByName[x]; }
+  for (const x of parts) for (const [k, v] of Object.entries(CC_ALIAS)) if (x.endsWith(' ' + k)) return v;
+  return null;
+}
+async function wikiArtist(name) {
+  const d = await wapi('en', { action: 'query', list: 'search', srsearch: `${name} band`, srlimit: '6', srprop: '' });
+  const res = (d.query && d.query.search) || []; const n = normA(name);
+  const pick = res.find(r => normA(r.title.replace(/\s*\([^)]*\)\s*$/, '')) === n && /\((band|musician|singer|rapper|group)\)/i.test(r.title))
+    || res.find(r => normA(r.title) === n) || res.find(r => normA(r.title.replace(/\s*\([^)]*\)\s*$/, '')) === n);
+  if (!pick) return { c: null, genres: [] };
+  const pr = await wapi('en', { action: 'parse', page: pick.title, prop: 'wikitext', section: '0', redirects: '1' });
+  const box = parseInfobox(pr.parse && pr.parse.wikitext, /\{\{\s*Infobox (musical artist|band|person)/i, { origin: 'origin', birth_place: 'birth_place', genre: 'genre' });
+  const get = k => (box.find(b => b[0] === k) || [])[1] || '';
+  return { c: ccFromPlace(get('origin') || get('birth_place')), genres: get('genre').split(', ').filter(Boolean) };
 }
 async function wikiFacts(title) {
   const d = await wapi('en', { action: 'parse', page: title, prop: 'wikitext', section: '0', redirects: '1' });
@@ -2255,7 +2339,7 @@ function wikiCardHtml(w, album) {
     ${L.sections.length ? `<div class="wchips">${L.sections.map((x, i) => `<button class="chip" data-wsec="${i}">${esc(wLabel(x.h))}</button>`).join('')}</div>` : ''}
     <button class="btn block" data-wall style="margin-top:12px">Tümünü oku${w.tr ? ' · Türkçesi de var' : ''} →</button></div>`;
 }
-async function mountWikiCard(el, album) {
+async function mountWikiCard(el, album, onLoad) {
   if (!el) return;
   const cached = wikiCacheGet(albumKey(album));
   if (!cached) el.innerHTML = `<div class="card wiki"><div class="wk-h"><span>📖 Albüm hakkında</span><small>Wikipedia</small></div><div class="wsk"><i></i><i></i><i style="width:60%"></i></div></div>`;
@@ -2265,12 +2349,13 @@ async function mountWikiCard(el, album) {
     const all = $('[data-wall]', el); if (all) all.onclick = () => openWiki(album);
     const pk = $('[data-wpick]', el); if (pk) pk.onclick = () => openWikiPicker(album, () => mountWikiCard(el, album));
   };
-  try { const w = await wikiLoad(album); if (el.isConnected) bind(w); }
+  try { const w = await wikiLoad(album); if (el.isConnected) bind(w); onLoad && onLoad(w); }
   catch (e) {
     if (!el.isConnected) return;
-    if (cached) return bind(cached);
-    el.innerHTML = `<div class="card wiki"><div class="wk-h"><span>📖 Albüm hakkında</span><small>Wikipedia</small></div><div class="muted" style="font-size:13px;margin-top:8px">Wikipedia'ya ulaşılamadı.</div><button class="chip" data-retry style="margin-top:10px">Tekrar dene</button></div>`;
-    $('[data-retry]', el).onclick = () => mountWikiCard(el, album);
+    if (cached) { bind(cached); onLoad && onLoad(cached); return; }
+    S.meta.lastErr = { src: 'Wikipedia', msg: String(e.message || e), at: Date.now() };
+    el.innerHTML = `<div class="card wiki"><div class="wk-h"><span>📖 Albüm hakkında</span><small>Wikipedia</small></div><div class="muted" style="font-size:13px;margin-top:8px">Wikipedia'ya ulaşılamadı.<br><span style="font-size:11px;color:var(--dim)">${esc(e.message || e)}</span></div><button class="chip" data-retry style="margin-top:10px">Tekrar dene</button></div>`;
+    $('[data-retry]', el).onclick = () => mountWikiCard(el, album, onLoad);
   }
 }
 function wikiBodyHtml(w, lang) {
@@ -2361,11 +2446,35 @@ function openSettings() {
       <span class="muted" style="font-size:12px">Böylece tam ekran uygulama gibi açılır ve verilerin daha güvende kalır.</span>
     </div>
 
+    <div class="h-sec">Bağlantı testi</div>
+    <div class="card" style="padding:14px">
+      <div class="muted" style="font-size:13px">Bir şey çalışmıyorsa buna bas ve ekran görüntüsünü gönder.</div>
+      <div id="netRes" style="margin-top:8px"></div>
+      <button class="btn block" id="sNet" style="margin-top:10px">Bağlantıları test et</button>
+    </div>
+
     <div class="h-sec">Tehlikeli bölge</div>
     <button class="btn block" id="sWipe" style="color:var(--red2)">Tüm verileri sil</button>
-    <div class="muted" style="font-size:12px;text-align:center;margin-top:18px">Ritüel · albüm verisi Apple Music & Deezer · ülkeler MusicBrainz</div>
+    <div class="muted" style="font-size:12px;text-align:center;margin-top:18px">Ritüel · sürüm ${APP_VERSION}<br>Albüm verisi Apple Music & Deezer · ülkeler MusicBrainz & Wikipedia</div>
   `, (sh, close) => {
     $('#sCountry', sh).onchange = e => { S.settings.country = e.target.value; save(); toast('Kaydedildi'); };
+    $('#sNet', sh).onclick = async () => {
+      const box = $('#netRes', sh);
+      const tests = [
+        ['Apple Music', () => jsonp('https://itunes.apple.com/search?term=metallica&entity=album&limit=1').then(d => d.results && d.results.length ? 'ok' : 'boş yanıt')],
+        ['Deezer', () => jsonp('https://api.deezer.com/search/album?q=metallica&limit=1&output=jsonp').then(d => d.data && d.data.length ? 'ok' : 'boş yanıt')],
+        ['Wikipedia', () => wapi('en', { action: 'query', list: 'search', srsearch: 'Master of Puppets album', srlimit: '1' }).then(d => d.query && d.query.search && d.query.search.length ? 'ok' : 'boş yanıt')],
+        ['Wikipedia metin', () => wikiPage('en', 'Master of Puppets').then(p => p.sections.length ? 'ok' : (p.intro.length ? 'sadece özet' : 'boş'))],
+        ['MusicBrainz', () => API.mbArtist('Metallica').then(r => r.c ? 'ok (' + r.c + ')' : 'ülke yok')],
+        ['Harita', () => fetch('world.json').then(r => r.ok ? 'ok' : 'HTTP ' + r.status)]
+      ];
+      box.innerHTML = tests.map(([n]) => `<div class="kv"><span>${n}</span><span data-n="${n}">…</span></div>`).join('');
+      await Promise.all(tests.map(async ([n, fn]) => {
+        const el = $(`[data-n="${n}"]`, box);
+        try { const r = await fn(); el.innerHTML = r.startsWith('ok') ? `<b style="color:#4ade80">✓</b> ${esc(r.replace(/^ok ?/, ''))}` : `<b style="color:#f5a524">!</b> ${esc(r)}`; }
+        catch (e) { el.innerHTML = `<b style="color:#f87171">✗</b> <span style="font-size:12px">${esc(e.message || e)}</span>`; }
+      }));
+    };
     $('#sExport', sh).onclick = async () => {
       const { draft, ...rest } = S;
       const data = JSON.stringify({ app: 'ritual', exportedAt: new Date().toISOString(), ...rest });
